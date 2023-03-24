@@ -1,0 +1,125 @@
+body{
+  background-color: rgb(10,120,30);
+  color:white;
+}
+
+header{
+  background-color: rgb(100,30,30);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+h1{
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.each_title{
+  display:flex;
+  justify-content: center;
+  width:85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.big_theme,.read_contents_small,.read_contents_cont{
+  border:black double 3px;
+  background-color: blanchedalmond;
+  color: black;
+  font-style: italic;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.big_theme{
+  font-size: 1.3em;
+}
+
+.read_contents_small{
+  font-size: 1.1em;
+  width: 300px;
+}
+.read_contents_cont{
+  font-size: 1em;
+  width: 300px;
+}
+
+
+.read_contents{
+  position:absolute;
+  /* display:none; */
+  left:0;
+  top:0;
+}
+
+
+.learn_title{
+  cursor:pointer;
+}
+
+.add_form{
+  margin-top: 30px;
+  width:85%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  border: white solid 3px;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 1.2em;
+}
+
+
+[class$="frame"]{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: white dashed 1px;
+}
+
+#conscious{
+  width:95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.plus_button_div{
+  margin-top: 10px;
+  text-align: center;
+}
+
+.plus_button_div>button{
+  font-size: 1em;
+}
+
+.add_theme,.if_error{
+  text-align: center;
+  color:red;
+  animation-name:add_anime;
+  animation-duration:2s;
+  animation-fill-mode:forwards;
+  height:30px;
+  line-height: 30px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+@keyframes add_anime{
+  99.9%{
+    visibility: visible;
+    opacity:1;
+    height:30px;
+    line-height: 30px;
+  }
+  100%{
+    visibility: hidden;
+    opacity:0;
+    height:0px;
+    line-height: 0px;
+  }
+}
+
+
