@@ -5,6 +5,8 @@
 /public/storage
 /storage/*.key
 /vendor
+public/titles
+/public/titles
 .env
 .env.backup
 .env.production
@@ -17,6 +19,3 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-/public/titles
-public/titles
-test.txt
