@@ -23,26 +23,33 @@ h1{
   margin-right: auto;
 }
 
-.big_theme,.read_contents_small,.read_contents_cont{
+.read_big_theme,.read_contents_small,.read_contents_cont{
   border:black double 3px;
   background-color: blanchedalmond;
   color: black;
   font-style: italic;
   font-weight: bold;
   padding: 5px;
+  cursor: pointer;
 }
 
-.big_theme{
+.read_big_theme{
   font-size: 1.3em;
 }
 
-.read_contents_small{
-  font-size: 1.1em;
-  width: 300px;
+
+.read_contents_small,.read_contents_cont{
+  display:none;
+  width: 100px;
 }
+
+
+.read_contents_small{
+  font-size: 0.9em;
+}
+
 .read_contents_cont{
-  font-size: 1em;
-  width: 300px;
+  font-size: 0.8em;
 }
 
 

@@ -1,9 +1,57 @@
 $(()=>{
+
+// Read処理
+
+
+
+
+// 大テーマにカーソルが当たったら小テーマを表示
+$(".read_big_theme").mouseover((e)=>{
+  $(".read_contents_small").each((i,elem)=>{
+    if($(elem).data("read_small_relatebig")===$(e.target).data("read_big")){
+      $(elem).css("display","block");
+      // 表示位置
+    
+    
+    }else{
+      $(elem).css("display","none");
+    }
+    // 小テーマにカーソルが当たったら内容を表示
+    $(elem).mouseover((e2)=>{
+      $(".read_contents_cont").each((i2,elem2)=>{
+        if($(elem2).data("read_cont_relatesmall")===$(elem).text()){
+          $(elem2).css("display","block");
+          // 表示位置
+
+        }else{
+          $(elem2).css("display","none");
+        }
+      })
+    })
+  })
+})
+    
   
-  // // 大テーマの切替で生じる変化
+// eachtitleの上とadd_formの下は強制的に表示を消す
+$("body").mousemove((e)=>{
+  let big_top=$(".each_title").offset().top;
+  let add_top=$(".add_form").offset().top;
+  if(big_top>e.clientY || add_top<e.clientY){
+    $(".read_contents_cont").css("display","none");
+    $(".read_contents_small").css("display","none");
+    }
+})
+
+
+
+
+
+// Create処理
+
+ // // 大テーマの切替で生じる変化
 
 $("#big_theme").change(()=>{
-console.log($("#select_small_theme").val());
+
   // ①小テーマを変更
     
   // １度現在表示のものを非表示

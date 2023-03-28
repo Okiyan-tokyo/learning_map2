@@ -17,24 +17,21 @@
 
 <div class="each_title">
 @foreach ($big_array as $big_str)
-  <div class="big_theme">{{$big_str}}</div>
+<div class="read_big_theme" data-read_big="{{$big_str}}">{{$big_str}}</div>
 @endforeach
 </div>
-
 @foreach ($big_array as $big_str)
   @if (Arr::has($small_array, $big_str))
     @foreach($small_array[$big_str] as $small_str)
-    <div class="read_contents_small">
-      <div class="">{{$small_str}}</div>
-    </div>
-        {{-- @foreach($cont_array[substr($big_str,0,3)."_".$small_str] as $c)
-          <div class="read_contents_cont">
-            <div class="">{{$c}}</div>
-          </div>
-        @endforeach --}}
+<div class="read_contents_small" data-read_small_relatebig="{{$big_str}}">{{$small_str}}</div>
+     @if(Arr::has($cont_array,substr($big_str,0,3)."_".$small_str))
+        @foreach($cont_array[substr($big_str,0,3)."_".$small_str] as $c)
+          <div class="read_contents_cont" data-read_cont_relatesmall="{{$small_str}}">{{$c}}</div>
+        @endforeach
+      @endif
     @endforeach
   @else
-  {{"ないぜ"}}
+  {{-- {{"ないぜ"}} --}}
   @endif
 @endforeach
 

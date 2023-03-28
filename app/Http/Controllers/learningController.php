@@ -49,12 +49,16 @@ class learningController extends Controller
                $btop=substr($b,0,3);
                $key_str=$btop."_".$sb;
    
-               foreach($conts as $cont)
-               if(array_key_exists($key_str,$cont_require_full)){
-                  $cont_require_full[$key_str][]=$cont["contents"];
-               }else{
-                  $cont_require_full[$key_str]=[$cont["contents"]];
+               foreach($conts as $cont){
+                  if(!empty($cont["contents"])){
+                     if(array_key_exists($key_str,$cont_require_full)){
+                        $cont_require_full[$key_str][]=$cont["contents"];
+                     }else{
+                        $cont_require_full[$key_str]=[$cont["contents"]];
+                     }
+                  }
                }
+
             }
          }
 
