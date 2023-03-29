@@ -11,8 +11,11 @@ $(".read_big_theme").mouseover((e)=>{
     if($(elem).data("read_small_relatebig")===$(e.target).data("read_big")){
       $(elem).css("display","block");
       // 表示位置
-    
-    
+      $(elem).offset({
+        left:$(e.target).offset().left+20,
+        top:$(elem).offset().top
+       }) 
+
     }else{
       $(elem).css("display","none");
     }
@@ -22,6 +25,7 @@ $(".read_big_theme").mouseover((e)=>{
         if($(elem2).data("read_cont_relatesmall")===$(elem).text()){
           $(elem2).css("display","block");
           // 表示位置
+
 
         }else{
           $(elem2).css("display","none");
