@@ -120,12 +120,11 @@
 </fieldset>
 
 <fieldset class="add_form">
-<legend>編集の場合</legend>
-<form action="" method="post">
-  @method("PATCH")
-  @csrf
-  <p>編集する項目を選んでください</p>
-  <div class="big_frame">
+<legend>名称編集の場合</legend>
+
+  <p>名称を編集する項目を選んでください</p>
+ 
+   <div class="big_frame">
     <label for="big_theme2">大テーマ</label>
     <select name="big_theme2" id="big_theme2">
       <option hidden>選択してください</option>
@@ -135,11 +134,45 @@
     </select>
     </div>
 
+   <div class="small_frame">
+    <label for="small_theme2">小テーマ</label>
+    <select name="small_theme2" id="small_theme2">
+      <option hidden>選択してください</option>
+      @foreach($big_array as $big_str)
+       @if(Arr::has($small_array,$big_str))
+          @foreach ($small_array[$big_str] as $small_str)
+          <option>{{$small_str}}</option>
+          @endforeach
+        @endif
+      @endforeach
+    </select>
+    </div>
 
+
+<div class="edit_decide_name">
+  <p class="edit_decide_p">変更する項目：未定</p>
+</div>
+
+<div class="form_sets">
+
+<form action="{{ route("editroute") }}" method="post">
+  @method("PATCH")
+  @csrf
   <div class="plus_button_div">
-    <button>編集！</button>
+    <button>名称の編集！</button>
   </div>
-  </form>
+</form>
+
+<form action="{{ route("deleteroute") }}" method="post">
+  @method("DELETE")
+  @csrf
+  <div class="plus_button_div">
+    <button>消去！</button>
+  </div>
+</form>
+
+</div>
+
 </fieldset>
 
 </fieldset>
