@@ -18,3 +18,11 @@ Route::get('/', [LearningController::class,"showindex"])->name("indexroute");
 
 // テーマを挿入したとき
 Route::post('/posts.learning_plus', [LearningController::class,"learning_plus"])->name("plusroute");
+
+// 名称編集の時
+Route::patch("patch/name",[Patchcontoroller::class,"namechange"])
+->name("editroute");
+
+// 削除の時
+Route::delete("delete/name",[Deletecontoroller::class,"themedelete"])
+->name("deleteroute");
