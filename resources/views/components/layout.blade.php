@@ -12,6 +12,7 @@
   integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
   crossorigin="anonymous"></script>
   <script differ src="{{url("js/learn.js")}}"></script>
+  <script differ src="{{url("js/edit.js")}}"></script>
 </head>
 <body>
 
