@@ -3,8 +3,6 @@ $(()=>{
 // Read処理
 
 
-
-
 // 大テーマにカーソルが当たったら小テーマを表示
 $(".read_big_theme").mouseover((e)=>{
   $(".read_contents_small").each((i,elem)=>{
@@ -18,15 +16,18 @@ $(".read_big_theme").mouseover((e)=>{
 
     }else{
       $(elem).css("display","none");
+      $(".read_contents_cont").css("display","none");
     }
     // 小テーマにカーソルが当たったら内容を表示
     $(elem).mouseover((e2)=>{
       $(".read_contents_cont").each((i2,elem2)=>{
-        if($(elem2).data("read_cont_relatesmall")===$(elem).text()){
+        if($(elem2).data("read_cont_relatesmall")===$(e2.target).text()){
           $(elem2).css("display","block");
           // 表示位置
-
-
+          $(elem2).offset({
+            left:$(e2.target).offset().left+20,
+            top:$(elem2).offset().top,
+          })
         }else{
           $(elem2).css("display","none");
         }
@@ -57,7 +58,6 @@ $("body").mousemove((e)=>{
 $("#big_theme").change(()=>{
 
   // ①小テーマを変更
-    
   // １度現在表示のものを非表示
   $("#select_small_theme").val("no_select");
   // 小テーマの動的変更
@@ -67,10 +67,8 @@ $("#big_theme").change(()=>{
     }else{
       $(opt).css("display","none");
     }
-  
   // optgroupの区切りタグはなくせるか？
   // divで表示させてoptionを生成する方がuiは綺麗かな？
-
   })
 
 
@@ -107,4 +105,19 @@ $("#big_theme").change(()=>{
     $("input[name='small_which']:eq(1)").prop("checked",true);
   });
 
+  // テーマ、名前が変更がされたらformの内部を変更
+  $("#change_what").change(function(){
+    $("#edit_item").val($("#change_what").text());
+  })
+  $("#after_edit_name_base").change(function(){
+    $("#after_edit_name").val($("#after_edit_name_base").val());
+  })
+
+
+
+
+
+
+
+// jqueryの終端
 })

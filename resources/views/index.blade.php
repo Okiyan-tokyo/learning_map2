@@ -4,16 +4,26 @@
   <h1>プログラミング学習サイト！</h1>
 </header>
 
-@empty(session("add"))
+
+@empty(session("change"))
 @else
-  <p class="add_theme">項目を追加しました！</p>
-@endisset
+  @switch(session("change"))
+    @case("add")
+      <p class="add_theme">項目を追加しました！</p>
+    @break
+    @case("edit")
+      <p class="add_theme">項目を変更しました！</p>
+    @break
+    @case("delete")
+      <p class="add_theme">項目を削除しました！</p>
+    @break
+  @endswitch
+@endempty
 
 @empty(session("PDOError"))
 @else
 <p class="add_theme">{{session("PDOError")}}</p>
-@endisset
-
+@endempty
 
 <div class="each_title">
 @foreach ($big_array as $big_str)
@@ -22,21 +32,20 @@
 </div>
 @foreach ($big_array as $big_str)
   @if (Arr::has($small_array, $big_str))
-    @foreach($small_array[$big_str] as $small_str)
-<div class="read_contents_small" data-read_small_relatebig="{{$big_str}}">{{$small_str}}</div>
-     @if(Arr::has($cont_array,substr($big_str,0,3)."_".$small_str))
-        @foreach($cont_array[substr($big_str,0,3)."_".$small_str] as $c)
-          <div class="read_contents_cont" data-read_cont_relatesmall="{{$small_str}}">{{$c}}</div>
+    @foreach($small_array[$big_str] as $small_parts)
+<div class="read_contents_small" data-read_small_relatebig="{{$big_str}}">{{$small_parts["small_theme"]}}</div>
+     @if(Arr::has($cont_array,substr($big_str,0,3)."_".$small_parts["small_theme"]))
+        @foreach($cont_array[substr($big_str,0,3)."_".$small_parts["small_theme"]] as $c)
+       
+          <div class="read_contents_cont" data-read_cont_relatesmall="{{$small_parts["small_theme"]}}">
+            {{$c["contents"]}}
+          </div>
         @endforeach
       @endif
     @endforeach
   @else
-  {{-- {{"ないぜ"}} --}}
   @endif
 @endforeach
-
-
-
 
 
 <fieldset class="add_form">
@@ -73,7 +82,7 @@
      <optgroup data-theme="{{$each_big}}" label="{{$each_big}}">
         <?php if(array_key_exists($each_big,$small_array)){ ?>
           @foreach($small_array[$each_big] as $each_small)
-          <option class="small_option" data-big="{{ $each_big }}">{{ $each_small }}</option>
+          <option class="small_option" data-big="{{ $each_big }}">{{ $each_small["small_theme"] }}</option>
           @endforeach
           <?php } ?>
       </optgroup>
@@ -119,62 +128,74 @@
   </form>
 </fieldset>
 
+
+
 <fieldset class="add_form">
-<legend>名称編集の場合</legend>
 
-  <p>名称を編集する項目を選んでください</p>
- 
-   <div class="big_frame">
-    <label for="big_theme2">大テーマ</label>
-    <select name="big_theme2" id="big_theme2">
-      <option hidden>選択してください</option>
-      @foreach ($big_array as $big_str)
-      <option>{{$big_str}}</option>
-      @endforeach
-    </select>
-    </div>
+<legend>編集の場合(意識以外)</legend>
 
-   <div class="small_frame">
-    <label for="small_theme2">小テーマ</label>
-    <select name="small_theme2" id="small_theme2">
-      <option hidden>選択してください</option>
-      @foreach($big_array as $big_str)
-       @if(Arr::has($small_array,$big_str))
-          @foreach ($small_array[$big_str] as $small_str)
-          <option>{{$small_str}}</option>
-          @endforeach
-        @endif
-      @endforeach
-    </select>
-    </div>
-
-
-<div class="edit_decide_name">
-  <p class="edit_decide_p">変更する項目：未定</p>
-</div>
-
-<div class="form_sets">
 
 <form action="{{ route("editroute") }}" method="post">
   @method("PATCH")
   @csrf
+
+  <p>編集する項目を選んでください</p> 
+
+ @include("changepart",["id_num"=>2])
+
+ <div class="edit_decide_item_div">
+  <label class="edit_decide_item" for="change_kind">変更するテーマ
+    <select  id="change_kind" name="edit_item_id">
+      <option value="small_theme">小テーマ</option>
+      <option value="contents">内容</option>
+      <option value="refer">参照</option>
+      <option value="URL">URL</option>
+    </select>
+</div>
+
+
+ <div class="edit_decide_item_div">
+  <label class="edit_decide_item" for="change_what">変更する項目
+    <input type="hidden" id="change_what" name="edit_item_id">
+    <p><span id="change_words">まだ選択されていません</span></p>
+  </label>
+ </div>
+
+ <div class="edit_decide_name_div">
+  <label  class="edit_decide_name" for="change_name">変更後の名称
+     <input id="chagne_name" type="text" name="after_edit_name">
+  </label>
+  <input type="hidden" name="category">
+</div>
+
+
+
   <div class="plus_button_div">
-    <button>名称の編集！</button>
+    <button id="edit_button">名称の編集！</button>
   </div>
 </form>
+
+<p class="">意識することは<a href="{{route("indexroute")}}">こちらへ</a></p>
+
+</fieldset>
+
+
+<fieldset class="add_form">
+
+  <legend>消去の場合</legend>
 
 <form action="{{ route("deleteroute") }}" method="post">
   @method("DELETE")
   @csrf
+  @include("changepart",["id_num"=>3])
   <div class="plus_button_div">
-    <button>消去！</button>
+    <button id="delete_button">消去！</button>
   </div>
+  <input type="hidden" name="delete_item">
 </form>
 
-</div>
-
+<p class="">意識することは<a href="{{route("indexroute")}}">こちらへ</a></p>
 </fieldset>
 
-</fieldset>
 
 </x-layout>

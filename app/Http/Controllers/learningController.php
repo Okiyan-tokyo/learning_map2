@@ -23,13 +23,24 @@ class learningController extends Controller
       $cont_require_full=[];
 
 
+// ミスしてsmall_fullとcontに悪意のある文字列が含まれた場合を考慮していない！
+
+
       foreach(self::$big_array as $b){
          // bは確実に上記列のどれか
-         $small_by_big=Learntheme::select("small_theme")->where("big_theme","=",$b)->get();
+         $small_by_big=Learntheme::select("id","small_theme")->where("big_theme","=",$b)->get();
          if(!empty($small_by_big)){
             foreach($small_by_big as $s){
-               if(!array_key_exists($b,$small_full) || !in_array($s["small_theme"],$small_full[$b])){
-                  $small_full[$b][]=$s["small_theme"];
+               if(!array_key_exists($b,$small_full)){
+                  $small_full[$b][]=$s;
+               }else{
+                  foreach($small_full[$b] as $sb){
+                     if($sb["small_theme"]===$s["small_theme"]){
+                        goto not_to_small_full;
+                     }
+                  }
+                  $small_full[$b][]=$s;
+                  not_to_small_full:
                }
             }
          }
@@ -40,21 +51,21 @@ class learningController extends Controller
             foreach($small_full[$b] as $sb){
    
                // 該当するcont
-               $conts=Learntheme::select("contents")->where([
+               $conts=Learntheme::select("id","contents")->where([
                   ["big_theme","=",$b],
-                  ["small_theme","=",$sb],
-                  ])->get();
+                  ["small_theme","=",$sb["small_theme"]],
+               ])->get();
    
                // indexに渡すcontのキー=大テーマの前３文字＆小テーマ
                $btop=substr($b,0,3);
-               $key_str=$btop."_".$sb;
+               $key_str=$btop."_".$sb["small_theme"];
    
                foreach($conts as $cont){
                   if(!empty($cont["contents"])){
                      if(array_key_exists($key_str,$cont_require_full)){
-                        $cont_require_full[$key_str][]=$cont["contents"];
+                        $cont_require_full[$key_str][]=$cont;
                      }else{
-                        $cont_require_full[$key_str]=[$cont["contents"]];
+                        $cont_require_full[$key_str]=[$cont];
                      }
                   }
                }
@@ -141,9 +152,8 @@ class learningController extends Controller
          // ファイル＆データの作成or編集
          $this->create_file_function($request,$posts);
 
-
-         $add=true;
-         return redirect(route("indexroute"))->with("add",$add);
+         $change_type="add";
+         return redirect(route("indexroute"))->with("change",$change_type);
 
    }
 
