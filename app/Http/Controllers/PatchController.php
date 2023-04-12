@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Learntheme;
-use App\Http\Requests\Learning_Requests;
+use App\Http\Requests\Edit_Requests;
 use Illuminate\Support\Facades\DB;
 
 class PatchController extends Controller
@@ -19,7 +19,7 @@ class PatchController extends Controller
         $errortype="";
 
         try{
-        DB::transaction(function($request){
+        DB::transaction(function()use($edit_item_id,$after_edit_name,$cate){
             $change_set=Learntheme::find($edit_item_id);
 
             

@@ -17,7 +17,7 @@
         @if(Arr::has($small_array,$each_big))
           <optgroup class="optg_s{{$id_num}}" data-theme{{$id_num}}="{{$each_big}}" label="{{$each_big}}">
             @foreach($small_array[$each_big] as $each_small)
-            <option class="small_option" data-big{{$id_num}}="{{ $each_big }}">{{ $each_small["small_theme"] }}</option>
+          <option class="small_option" data-big{{$id_num}}="{{ $each_big }}" data-this_id="{{$each_small["id"]}}" value="{{$each_small["small_theme"]}}">{{ $each_small["small_theme"] }}</option>
             @endforeach
           </optgroup>
         @endif
@@ -27,7 +27,7 @@
 
  <div class="cont_frame">
   <label for="cont_change">内容</label>
-  <select name="cont_change" id="cont_change{{$id_num}}">
+ <select name="cont_change{{$id_num}}" id="cont_change{{$id_num}}">
     <option hidden value="no_select">選択してください</option>
     @foreach ($big_array as $each_big)
     @if(Arr::has($small_array,$each_big))
@@ -36,7 +36,7 @@
       <optgroup  class="optg_c{{$id_num}}" data-small_theme{{$id_num}}="{{$small_parts["small_theme"]}}" label="{{$small_parts["small_theme"]}}">
         @foreach ($cont_array[substr($each_big,0,3)."_".$small_parts["small_theme"]] as $cont_parts)
         ))
-        <option value="{{$cont_parts["id"]}}">{{$cont_parts["contents"]}}</option>
+        <option class="cont_option" data-this_id="{{$cont_parts["id"]}}">{{$cont_parts["contents"]}}</option>
         @endforeach 
       </optgroup>
       @endif
