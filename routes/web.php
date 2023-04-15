@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LearningController;
+use App\Http\Controllers\PatchController;
+use App\Http\Controllers\DeleteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +22,9 @@ Route::get('/', [LearningController::class,"showindex"])->name("indexroute");
 Route::post('/posts.learning_plus', [LearningController::class,"learning_plus"])->name("plusroute");
 
 // 名称編集の時
-Route::patch("patch/name",[Patchcontoroller::class,"namechange"])
+Route::patch("patch/name",[PatchController::class,"namechange"])
 ->name("editroute");
 
 // 削除の時
-Route::delete("delete/name",[Deletecontoroller::class,"themedelete"])
+Route::delete("delete/name",[DeleteController::class,"themedelete"])
 ->name("deleteroute");

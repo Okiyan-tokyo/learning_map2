@@ -5,6 +5,8 @@
 </header>
 
 
+
+
 @empty(session("change"))
 @else
   @switch(session("change"))
@@ -22,7 +24,8 @@
 
 @empty(session("PDOError"))
 @else
-<p class="add_theme">{{session("PDOError")}}</p>
+
+<p class="add_theme">{!! nl2br(e(session("PDOError")))!!}</p>
 @endempty
 
 <div class="each_title">
@@ -145,7 +148,8 @@
 
  <div class="edit_decide_item_div">
   <label class="edit_decide_item" for="change_kind">変更するテーマ
-    <select  id="change_kind" name="edit_item_id">
+    <select  id="change_kind" name="category">
+      <option type="hidden" id="edit_category_default">選択してください</option>
       <option value="small_theme">小テーマ</option>
       <option value="contents">内容</option>
       <option value="refer">参照</option>
@@ -156,7 +160,7 @@
 
  <div class="edit_decide_item_div">
   <label class="edit_decide_item" for="change_what">変更する項目
-    <input type="hidden" id="change_what" name="edit_item_id">
+    <input type="hidden" id="edit_item_id" name="edit_item_id">
     <p><span id="change_words">まだ選択されていません</span></p>
   </label>
  </div>
@@ -165,7 +169,9 @@
   <label  class="edit_decide_name" for="change_name">変更後の名称
      <input id="chagne_name" type="text" name="after_edit_name">
   </label>
-  <input type="hidden" name="category">
+  @error('after_edit_name')
+    <p class="if_error"> {{$message}}</p>
+  @enderror
 </div>
 
 
