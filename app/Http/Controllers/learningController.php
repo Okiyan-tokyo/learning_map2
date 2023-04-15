@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Learntheme;
 use App\Http\Requests\Learning_Requests;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\CheckController;
 
 class learningController extends Controller
 {   
@@ -23,9 +24,6 @@ class learningController extends Controller
       $cont_require_full=[];
 
 
-// ミスしてsmall_fullとcontに悪意のある文字列が含まれた場合を考慮していない！
-
-
       foreach(self::$big_array as $b){
          // bは確実に上記列のどれか
          $small_by_big=Learntheme::select("id","small_theme")->where("big_theme","=",$b)->get();
@@ -35,6 +33,7 @@ class learningController extends Controller
                   $small_full[$b][]=$s;
                }else{
                   foreach($small_full[$b] as $sb){
+                     // PHP限定：小テーマで内容を２つ以上入れてる時に表示は1回のみ
                      if($sb["small_theme"]===$s["small_theme"]){
                         goto not_to_small_full;
                      }
@@ -92,55 +91,67 @@ class learningController extends Controller
             $posts->big_theme=$request->big_theme;
 
             $returnvalue=[];
+            
+            // check用のクラス
+            $check_class=new CheckController();
+
+            // コードの短縮用
+            $r1=$request->big_theme;
+            $r2=$request->small_theme;
+            $r3=$request->contents;
+            $r4=$request->reference;
+            $r5=$request->conscious;
+            $r6=$request->linkurl;
 
             // 小テーマのチェック
-            if($this->small_check($posts,$request)!=="ok"){
-            $returnvalue[]=$this->small_check($posts,$request);
+            if($check_class->small_check($posts,$request)!=="ok"){
+            $returnvalue[]=$check_class->small_check($posts,$request);
             }
       
-    
             // 内容のチェック
-            if($this->cont_check($posts,$request)!=="ok"){
-               $returnvalue[]=$this->cont_check($posts,$request);
+            if($check_class->cont_check($r1,$r2,$r3)!=="ok"){
+               $returnvalue[]=$check_class->cont_check($r1,$r2,$r3);
             }
             
             // 参考のチェック
-            if($this->refer_check($posts,$request)!=="ok"){
-               $returnvalue[]=$this->refer_check($posts,$request);
+            if($check_class->refer_check($r1,$r4)!=="ok"){
+               $returnvalue[]=$check_class->refer_check($r1,$r4);
+            }
+            
+            // 意識のチェック
+            if($check_class->conscious_check($r1,$r5)!=="ok"){
+               $returnvalue[]=$check_class->conscious_check($r1,$r5);
             }
 
             // URLのチェック
-            if($this->url_check($posts,$request)!=="ok"){
-               $returnvalue[]=$this->url_check($posts,$request);
+            if($check_class->url_check($r1,$r2,$r6)!=="ok"){
+               $returnvalue[]=$check_class->url_check($r1,$r2,$r6);
             }
-
-            // 意識のチェック
-            if($this->conscious_check($posts,$request)!=="ok"){
-               $returnvalue[]=$this->conscious_check($posts,$request);
-            }
+            
 
             // 条件を満たしていない場合は例外を投げる
             if(!empty($returnvalue)){
-               $returnword=implode(",",$returnvalue);
+
+               $returnword=implode("\n",$returnvalue);
                throw new \PDOException($returnword);
             }
             
 
-            $posts->small_theme=$request->small_theme;
+            $posts->small_theme=self::h($r2);
       
-            if($request->contents){
-               $posts->contents=self::h($request->contents);
+            if($r3){
+               $posts->contents=self::h($r3);
             }
             
-            if($request->reference){
-               $posts->reference=self::h($request->reference);
+            if($r4){
+               $posts->reference=self::h($r4);
             }
            
-            if($request->conscious){
-               $posts->conscious=self::h($request->conscious);
+            if($r5){
+               $posts->conscious=self::h($r5);
             }
 
-            $posts->url=$request->linkurl;
+            $posts->url=$r6;
 
             $posts->save();
             DB::commit();
@@ -157,112 +168,9 @@ class learningController extends Controller
 
    }
 
-   // 小テーマのチェック
-   public function small_check($posts,$request){
-
-      //  新規が既存ではないか？既存が新規ではないか？
-      $is_small_exist=$posts->select("small_theme")->where([
-         ["big_theme","=",$request->big_theme],
-         ["small_theme","=",$request->small_theme]
-      ])->get();
+   
 
 
-
-      switch($request->small_which){
-         case "exists":
-            if(!$is_small_exist->isNotEmpty()){
-               return "テーマがありません";
-            }   
-         break;
-         case "new":
-            if($is_small_exist->isNotEmpty()){
-               return "既存テーマです";
-            }   
-         break;
-         default:
-          return "選択されていません";
-         break;
-      }
-      return "ok";
-   }
-
-   // 内容のチェック
-   public function cont_check($posts,$request){
-      switch($request->contents){
-         case "PHP":
-         case "Laravel":
-         case "Q_A":
-            if(empty($request->contents)){
-               return "問題は内容に入力してください";
-            }else{
-               return "ok";
-            }
-         break;
-         default:
-            return "ok";
-         break;
-      }
-   }
-
-   // 参照のチェック
-   public function refer_check($posts,$request){
-      switch($request->reference){
-         case "Q_A":
-            if(empty($request->contents)){
-               return "解答は内容に入力してください";
-            }else{
-               return "ok";
-            }
-         break;
-         default:
-            return "ok";
-         break;
-      }
-   }
-
-   // 意識のチェック
-   public function conscious_check($posts,$request){
-      return "ok";
-   }
-
-   // urlのチェック
-   public function url_check($posts,$request){
-      switch($request->big_theme){
-         case "PHP":
-            // 最後はPHP 必ず選択
-            if(empty($request->linkurl)){
-               return "URLは必ず入力してください";
-            } 
-            if(substr($request->linkurl,-4)!==".php"){
-               return "リンクの拡張子をPHPにしてください";
-            }
-         break;
-         case "Laravel":
-            // テーマごとに別々のリストが作成される
-            if(!empty($request->linkurl)){
-               return "URLは空白にしてください(自動で作成します)";
-            } 
-         break;
-         case "Javascript":
-         case "html/css":
-         case "environment":
-            if(empty($request->linkurl)){
-               return "URLは必ず入力してください";
-            } 
-            if(substr($request->linkurl,-4)!==".php"
-               && substr($request->linkurl,-5)!==".html"
-            ){
-               return "リンクの拡張子をHTMLかPHPにしてください";
-            }
-         break;
-         case "Q_A":
-            if(!empty($request->linkurl)){
-               return "リンクは無効です";
-            }
-         break;
-      }
-      return "ok";
-   }
 
 
    // ファイルの作成

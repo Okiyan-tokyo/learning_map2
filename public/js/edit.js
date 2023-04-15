@@ -28,13 +28,15 @@ for(let id_num=1;id_num<4;id_num++){
   })
 
 
-  // テーマが変更→変更する名称の変更
-  $("#change_kind").change(function(){
-    auto_input(id_num);
-  });
-
+  
 }
 
+// テーマが変更→変更する名称の変更
+// 編集のみの機能
+$("#change_kind").change(function(){
+  console.log("a");
+  auto_input(2);
+});
 
 
 
@@ -61,12 +63,14 @@ function auto_input(id_num){
       case "small_theme":
         $("#edit_item_id").val($("#select_small_theme"+id_num).find(".small_option:selected").data("this_id"));
         $("#change_words").text($("#select_small_theme"+id_num).val());        
+        console.log($("#edit_item_id").val());
       break;
       case "contents":
         $("#edit_item_id").val($("#cont_change"+id_num).find(".cont_option:selected").data("this_id"));
         $("#change_words").text($("#cont_change"+id_num).val());  
       break;
       case "refer":
+
         $("#change_words").val();
       break;
       case "URL":

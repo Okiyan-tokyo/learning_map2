@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\Regex_Pattern;
 
 class Learning_Requests extends FormRequest
 {
@@ -30,7 +31,7 @@ class Learning_Requests extends FormRequest
             "small_theme"=>[
                 "required",
                 "regex:/^[a-zA-z]+[a-zA-Z0-9]*$/"
-             ]
+            ],
         ];
     }
 
