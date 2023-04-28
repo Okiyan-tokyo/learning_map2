@@ -114,10 +114,5 @@ $("#big_theme").change(()=>{
   })
 
 
-
-
-
-
-
 // jqueryの終端
 })

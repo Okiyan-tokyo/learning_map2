@@ -25,18 +25,31 @@ class PatchController extends Controller
         $after_edit_name=$request->after_edit_name;
         $cate=$request->category;
         
-        if(empty($big_theme) ||empty($small_theme) ||empty($edit_item_id) ||empty($after_edit_name) ||empty($cate)){
+        if(empty($big_theme) ||empty($small_theme) ||empty($after_edit_name) ||empty($cate)){
             throw new \PDOException("何らかのデータが入力できていません");
         }
-        
+
+        if(!(in_array($big_theme,["PHP","Q_A"]) && $cate==="small_theme") && empty($edit_item_id)){
+            throw new \PDOException("何らかのエラーです");
+        }
+
         // エラーのフラグ
         $returnvalue=[];
 
+        // PHPかクイズでかつ小テーマ変更のフラグ
+        if(in_array($big_theme,["PHP","Q_A"]) && $cate==="small_theme"){
+            $php_or_quiz=true;
+        }else{
+            $php_or_quiz=false;
+        }
 
-             $all_set=Learntheme::all();
-             // small_theme以外は一意に決まる。
+        if($php_or_quiz){
+            $change_set=Learntheme::select("id","big_theme","small_theme")->where([
+                ["big_theme","=",$big_theme],
+                ["small_theme","=",$small_theme],
+            ])->get();
+        }else{
             $change_set=Learntheme::find($edit_item_id);
-
             // コードを短種する
             $c1=$change_set->big_theme;
             $c2=$change_set->small_theme;
@@ -44,18 +57,39 @@ class PatchController extends Controller
             $c4=$change_set->reference;
             $c5=$change_set->concsious;
             $c6=$change_set->url;
-            
+        }
+
             switch($cate){
                 case "small_theme":
-                    // phpとクイズの場合、idが一意に決まらない
                     $small_isok=$check_class->small_edit($after_edit_name,$big_theme,$small_theme);
+                    // 重複
                     if($small_isok!=="ok"){
                         $returnvalue[]=$small_isok;
-                    }else{
-                        // 既に行っている
-                        // 例外であってもtransactionで戻る
                     }
+                    // phpとクイズの場合、idが一意に決まらない
+                    if(!$php_or_quiz){
+                        $change_set->small_theme=$after_edit_name;
+                      }else{
+                        foreach($change_set as $c){
+                        // ここだけtransaction内で別処理のsaveになってしまう！！
+                            $original[$c->id]=$c->small_theme;
+                            $c->small_theme=$after_edit_name;
+                            $c->save();
+                            
+                            // エラーの場合（どう定義する？）
+                            // if(error){ $c->small_theme=$original[$c->id]};
+
+                        }
+                     }
                 break;
+
+                // PHPとQ_Aのカテゴリーを変更したい場合
+                case "small_category_change":
+
+                break;
+
+
+
                 case "contents":
                     // 内容は通常チェックと同じ
                     if($check_class->cont_check($c1,$c2,$after_edit_name)!=="ok"){
@@ -86,7 +120,9 @@ class PatchController extends Controller
             if(!empty($returnvalue)){
                 throw new \PDOException(implode("\n",$returnvalue));
             }
-            $change_set->save();
+            if(!$php_or_quiz){
+                $change_set->save();
+            }
         });
 
     }catch(\PDOException $e){

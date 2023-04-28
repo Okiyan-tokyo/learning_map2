@@ -83,7 +83,7 @@ class CheckController extends Controller
         switch($big_theme){
            case "Q_A":
               if(empty($reference)){
-                 return "解答は内容に入力してください";
+                 return "解答がありません\n(参照に入力してください)";
               }else{
                  return "ok";
               }
@@ -170,14 +170,10 @@ class CheckController extends Controller
 
 
 //  編集の時：小テーマが既に存在していないか？
-public function small_edit($after_edit_name,$big_theme,$small_theme){
-   // phpとクイズの場合、該当idが１つではない
-   // まずは大テーマにおける重複がないか確認する
-
-   // リストにおいて大テーマと小テーマが該当するものの確認
+public function small_edit($after_edit_name,$big_theme){
+   // 重複がないか確認する
    $exist_lists=Learntheme::select("id","small_theme")->where([
       ["big_theme","=",$big_theme],
-      ["small_theme","=",$small_theme]
    ])->get();
 
    // after_edit_nameが既存のものと重複していないかの確認
@@ -186,15 +182,21 @@ public function small_edit($after_edit_name,$big_theme,$small_theme){
          return "既存テーマです";
       }
    }
-
-   // 既存テーマではない時、該当idのsmallthemeを全て変更
-   foreach($exist_lists as $each_list){
-      $edit_data=Learntheme::find($each_list["id"]);
-      $edit_data->small_theme=$after_edit_name;
-   }
    return "ok";
 }
 
+ 
+// public function small_if_phporquiz_edit($after_edit_name,$big_theme,$small_theme){
+//    // 既存テーマではない時、該当idのsmallthemeを全て変更
+//    $exist_lists=Learntheme::select("id","small_theme")->where([
+//       ["big_theme","=",$big_theme],
+//       ["small_theme","=",$small_theme]
+//    ])->get();
+//    foreach($exist_lists as $each_list){
+//       $edit_data=Learntheme::find($each_list["id"]);
+//       $edit_data->small_theme=$after_edit_name;
+//    }
+//    }
 
 
 }
