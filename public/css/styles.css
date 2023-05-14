@@ -92,18 +92,18 @@ h1{
   margin-right: auto;
 }
 
+.counscious_list{
+  display: block;
+  margin-bottom: 8px;
+}
+
 
 .plus_button_div{
   margin-top: 10px;
   text-align: center;
 }
 
-.plus_button_div>button{
-  font-size: 1em;
-}
-
 .add_theme,.if_error{
-  text-align: center;
   color:red;
   animation-name:add_anime;
   animation-duration:2s;
@@ -112,6 +112,16 @@ h1{
   line-height: 30px;
   margin-bottom: 0;
   margin-top: 0;
+}
+
+.add_theme{
+  text-align: center;
+}
+
+.if_error{
+  text-align: left;
+  padding-left: 30px;
+  font-size: 0.9em;
 }
 
 @keyframes add_anime{
@@ -129,4 +139,151 @@ h1{
   }
 }
 
+/* 意識することへのリンク */
+.to_conscious{
+  text-align: center;
+  font-size: 0.9em;
+}
 
+/* ボタンの編集 */
+button{
+  font-size: 0.9em;
+}
+
+/* inputとselectの微修正 */
+input,select{
+  transform: translateY(-2.5px);
+}
+
+/* 初期状態でfieldsetは表示しない */
+fieldset{
+  display: none;
+}
+
+/* crud_list */
+.crud_list{
+  margin-top: 50px;
+  margin-right: auto;
+  margin-left: auto;
+  width:300px;
+  padding:20px;
+  padding-top:15px;
+  border:white solid 1px;
+  border-radius: 10px;
+}
+
+/* 初期状態はリンク表示 */
+.field_display,.to_config_page{
+  width:250px;
+  padding-bottom: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-bottom: white solid 1px;
+  cursor: pointer;
+}
+
+.field_display::before,.to_config_page::before{
+  content: "・";
+}
+
+.to_config_page>a{
+  color:white;
+}
+
+
+
+
+/* configページ */
+
+#conf_h2{
+  color:white;
+  text-align: center;
+}
+
+.conf_change_form{
+  margin-right: auto;
+  margin-left: auto;
+  width:80%;
+  max-width:500px;
+  min-width:300px;
+  border:white solid 2px;
+  border-radius: 10px;
+}
+
+.conf_big_theme_div,.conf_choise_cont_div,.conf_file_div{
+  border-bottom: white dashed 1px;
+  margin-top: 8px;
+  padding:20px;
+  width:90%;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 280px;
+  text-align: center;
+}
+
+.conf_big_theme{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width:80%;
+  margin-top: 10px;
+}
+
+.conf_choise_p,.conf_which_sets,.conf_file_div{
+  text-align: left;
+}
+
+#conf_big_to_cont,#conf_back_cont{
+  display: block;
+  text-decoration: underline;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.conf_cont_which_input{
+  vertical-align: middle;
+}
+
+.conf_cont_label{
+  transform: translateY(-5px);
+}
+
+#conf_cont_spanSets{
+  display:flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.conf_file_from_bigTheme{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+
+#conf_cont_to_file,#conf_back_bigTheme{
+  text-decoration: underline;
+  text-align: center;
+  cursor: pointer;
+}
+
+#conf_cont_to_file{
+  margin-right: 50px;
+}
+
+#conf_back_bigTheme{
+  margin-left: 50px;
+}
+
+.conf_choise_cont_div,.conf_file_div{
+  display: none;
+}
+
+.back_home{
+  text-align: center;
+  color:white;
+}

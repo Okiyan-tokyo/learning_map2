@@ -132,5 +132,10 @@ class PatchController extends Controller
     }
 
 
+    // 意識することの編集
+    public function edit_counscious(){
+        return redirect(route("indexroute"));
+    }
+
 }
 
