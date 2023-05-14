@@ -1,8 +1,8 @@
 <x-layout>
   <x-slot name="title">プログラミング学習サイト</x-slot>
-  <script differ src="{{url("js/learn.js")}}"></script>
-  <script differ src="{{url("js/create.js")}}"></script>
-  <script differ src="{{url("js/edit.js")}}"></script>
+  <script defer src="{{url("js/learn.js")}}"></script>
+  <script defer src="{{url("js/create.js")}}"></script>
+  <script defer src="{{url("js/edit.js")}}"></script>
 <header>
   <h1>プログラミング学習サイト！</h1>
 </header>
@@ -40,7 +40,6 @@
 <div class="read_contents_small" data-read_small_relatebig="{{$big_str}}">{{$small_parts["small_theme"]}}</div>
      @if(Arr::has($cont_array,substr($big_str,0,3)."_".$small_parts["small_theme"]))
         @foreach($cont_array[substr($big_str,0,3)."_".$small_parts["small_theme"]] as $c)
-       
           <div class="read_contents_cont" data-read_cont_relatesmall="{{$small_parts["small_theme"]}}">
             {{$c["contents"]}}
           </div>

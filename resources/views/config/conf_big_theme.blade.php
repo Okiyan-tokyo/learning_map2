@@ -7,10 +7,14 @@
       </x-slot>
   <script differ src={{url("js/conf.js")}}></script>
 
+@empty(session("message"))
+@else
+<p class="conf_message">{{session("message")}}</p>
+@endempty
+
 <h2 id="conf_h2">{{
   $add_or_create==="create" ? "初期設定" : "設定の編集"
   }}</h2>
-
 
   {{-- 初期設定か編集かによって変更する --}}
   {{-- ひとまず初期設定を記入 --}}
@@ -48,7 +52,7 @@
         <div class="cont_which_div">
           <input type="checkbox" 
           class="conf_cont_which_input"
-        name="cont_which_sets" value="number{{$n}}" id="conf_chk{{$n}}">
+        name="cont_which_sets{{$n}}" value="number{{$n}}" id="conf_chk{{$n}}">
          <label class="conf_cont_label" for="conf_chk{{$n}}"></label>
         </div>
         @endfor
@@ -63,14 +67,18 @@
         @for($n=1;$n<=7;$n++)
           <div class="file_which_div">
             <label class="conf_file_from_bigTheme" for="conf_select"></label>
-            <select id="conf_select" class="conf_file_which_select"     data-baseid="">
+            <select id="conf_select" class="conf_file_which_select"   
+            name="file_which_sets{{$n}}" data-baseid="">
             @for($nn=0;$nn<=3;$nn++)
-              <option name="file_which_sets{{$n}}" value="number{{$nn}}">{{$filelists[$nn]}}</option>
+            <option value="{{$fileEnums[$nn]}}">{{$filelists[$nn]}}</option>
             @endfor
             </select>
           </div>
          @endfor
          <span id="conf_back_cont">戻る</span>
+    </div>
+    <div id="config_button_div">
+      <button id="config_button">決定！</button>
     </div>
   </form>
 
