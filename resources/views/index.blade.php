@@ -1,10 +1,11 @@
 <x-layout>
-
+  <x-slot name="title">プログラミング学習サイト</x-slot>
+  <script differ src="{{url("js/learn.js")}}"></script>
+  <script differ src="{{url("js/create.js")}}"></script>
+  <script differ src="{{url("js/edit.js")}}"></script>
 <header>
   <h1>プログラミング学習サイト！</h1>
 </header>
-
-
 
 
 @empty(session("change"))
@@ -51,85 +52,19 @@
 @endforeach
 
 
-<fieldset class="add_form">
-<legend>追加の場合</legend>
-<form method="post" action="{{ route("plusroute") }}" >
-  @csrf
-  
-  <div class="big_frame">
-  <label for="big_theme">大テーマ</label>
-  <select name="big_theme" id="big_theme">
-    <option hidden>選択してください</option>
-    @foreach ($big_array as $big_str)
-    <option>{{$big_str}}</option>
-    @endforeach
-  </select>
-  </div>
-  @error('big_theme')
-     <p class="if_error"> {{$message}}</p>
-  @enderror
-  
-  <div class="small_frame">
-  <label for="small_theme">小テーマ</label>
-  <div id="small_theme">
-    
-    <label for="small_exist">
-    <input type="radio" 
-    name="small_which" 
-    id="small_exist"
-    value="exists">
-    既存テーマ</label>
-    <select id="select_small_theme">
-      <option hidden id="option_hidden" value="no_select">選択してください</option>
-      @foreach($big_array as $each_big)
-     <optgroup data-theme="{{$each_big}}" label="{{$each_big}}">
-        <?php if(array_key_exists($each_big,$small_array)){ ?>
-          @foreach($small_array[$each_big] as $each_small)
-          <option class="small_option" data-big="{{ $each_big }}">{{ $each_small["small_theme"] }}</option>
-          @endforeach
-          <?php } ?>
-      </optgroup>
-      @endforeach
-      </select>
-    <br>
-    <label for="small_new">
-    <input id="small_new" type="radio" name="small_which" value="new">
-    新規テーマ</label>
-    <input id="input_small_theme"  type="text">
- 
-  </div>
+{{-- crud_list--}}
+<div class="crud_list">
+  <p class="field_display">Add</p>
+  <p class="field_display">Edit</p>
+  <p class="field_display">Delete</p>
+  <p class="to_config_page"><a href="{{route("configroute")}}">Config</a></p>
 </div>
 
-@error('small_theme')
-  <p class="if_error"> {{$message}}</p>
-@enderror
-
-
-  <div class="cont_frame">
-  <label for="contents">内容（クイズなら問題）</label>
-  <input name="contents" type="text"  id="contents" value={{old("contents")}}>
-  </div>
-
-  <div class="refer_frame">
-  <label for="reference">参考（クイズなら解答）</label>
-  <input name="reference" type="text"  id="references" value={{old("reference")}}>
-  </div>
-  
-  <div class="conscious_frame">
-  <label for="concsious">意識することリスト</label>
-  <textarea name="conscious" id="conscious" placeholder="空白可。改行で内容を区切ってください" rows="10">{{old("conscious")}}</textarea>
-  </div>
-  
-  <div class="cont_frame">
-    <label for="linkurl">URL</label>
-    <input name="linkurl" type="text"  id="linkurl" value={{old("linkurl")}}>
-  </div>
-
-    <div class="plus_button_div">
-      <button>追加！</button>
-    </div>
-  </form>
-</fieldset>
+{{-- 追加ページの呼び出し --}}
+@include("addpart",([
+  "big_array"=>$big_array,
+  "small_array"=>$small_array,
+]))
 
 
 
@@ -146,8 +81,8 @@
 
  @include("changepart",["id_num"=>2])
 
- <div class="edit_decide_item_div">
-  <label class="edit_decide_item" for="change_kind">変更するテーマ
+ <div class="edit_decide_tehem_frame">
+  <label class="edit_decide_theme" for="change_kind">変更するテーマ
     <select  id="change_kind" name="category">
       <option type="hidden" id="edit_category_default">選択してください</option>
       <option value="small_theme">小テーマ</option>
@@ -158,14 +93,13 @@
 </div>
 
 
- <div class="edit_decide_item_div">
-  <label class="edit_decide_item" for="change_what">変更する項目
-    <input type="hidden" id="edit_item_id" name="edit_item_id">
-    <p><span id="change_words">まだ選択されていません</span></p>
+ <div class="edit_decide_item_frame">
+  <label class="edit_decide_item" for="change_what">変更する項目：<span id="change_words">まだ選択されていません</span>
+  <input type="hidden" id="edit_item_id" name="edit_item_id">
   </label>
  </div>
 
- <div class="edit_decide_name_div">
+ <div class="edit_decide_name_frame">
   <label  class="edit_decide_name" for="change_name">変更後の名称
      <input id="chagne_name" type="text" name="after_edit_name">
   </label>
@@ -181,10 +115,9 @@
   </div>
 </form>
 
-<p class="">意識することは<a href="{{route("indexroute")}}">こちらへ</a></p>
+<p class="to_conscious">意識することは<a href="{{route("edit_conscious_route")}}">こちらへ</a></p>
 
 </fieldset>
-
 
 <fieldset class="add_form">
 
@@ -200,8 +133,9 @@
   <input type="hidden" name="delete_item">
 </form>
 
-<p class="">意識することは<a href="{{route("indexroute")}}">こちらへ</a></p>
+<p class="to_conscious">意識することは<a href="{{route("delete_conscious_route")}}">こちらへ</a></p>
 </fieldset>
+
 
 
 </x-layout>

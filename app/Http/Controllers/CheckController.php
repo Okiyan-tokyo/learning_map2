@@ -63,7 +63,11 @@ class CheckController extends Controller
               if(empty($contents)){
                  return "問題は内容に入力してください";
               }
-           break;     
+           break;
+           case "PHP":
+            if(empty($contents)){
+               return "内容は入力してください";
+            }   
            default:
            break;
           }
