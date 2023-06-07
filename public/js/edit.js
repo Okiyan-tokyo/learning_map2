@@ -1,4 +1,6 @@
-  // edit処理
+"use strict"
+
+// edit処理
 $(()=>{
 
 // ①大テーマのchange(functionでまとめたい)

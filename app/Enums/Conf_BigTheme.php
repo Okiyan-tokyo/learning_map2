@@ -28,11 +28,12 @@ final class Conf_BigTheme extends Enum
 
     // 日本語で表示した配列を返す
    static public function jpnDescription(){
+       $engArray=self::engDescription();
         $jpn_descriptions=[
-            "HTML",
-            "PHP",
-            "HTML/PHP両方",
-            "作成しない"
+            $engArray[0]=>"HTML",
+            $engArray[1]=>"PHP",
+            $engArray[2]=>"HTML/PHP両方",
+            $engArray[3]=>"作成しない"
         ];
         return $jpn_descriptions;
     }

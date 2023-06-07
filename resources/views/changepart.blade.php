@@ -1,5 +1,5 @@
 <div class="big_frame">
-  <label for="big_theme">大テーマ</label>
+  <label>大テーマ</label>
 <select name="big_theme" id="big_theme{{$id_num}}">
     <option hidden>選択してください</option>
     @foreach ($big_array as $big_str)
@@ -9,7 +9,7 @@
   </div>
 
  <div class="small_frame">
-  <label for="small_theme">小テーマ</label>
+  <label>小テーマ</label>
   <select name="small_theme" id="select_small_theme{{$id_num}}">
     <option hidden value="no_select">選択してください</option>
         @foreach($big_array as $each_big)
@@ -25,7 +25,7 @@
   </div> 
 
  <div class="cont_frame">
-  <label for="cont_change">内容</label>
+  <label>内容</label>
  <select name="cont_change{{$id_num}}" id="cont_change{{$id_num}}">
     <option hidden value="no_select">選択してください</option>
     {{-- 大テーマを見ていく --}}

@@ -1,3 +1,5 @@
+"use strict"
+
 $(()=>{
 
 // Create処理

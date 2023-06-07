@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\Regex_Pattern;
+use App\Models\Big_theme;
 
 class Learning_Requests extends FormRequest
 {
@@ -22,10 +23,21 @@ class Learning_Requests extends FormRequest
      */
     public function rules()
     {
+    
+        //大テーマを配列に直す 
+
+        $big_array=[];
+        $big_theme_base=Big_theme::select("big_theme");
+        foreach($big_theme_base as $b){
+            $big_theme_base[]=$b->big_theme;
+        }
+
+        $rgxstr=implode("|",$big_array)."|Q&A";
+
         return [
             "big_theme"=>[
                 "required",
-                "regex:/^(PHP|Laravel|Javascript|GoogleMapAPI|css|Environment|Q_A|Desc)$/"
+                "regex:/^(${rgxstr})$/"
             ],
             
             "small_theme"=>[

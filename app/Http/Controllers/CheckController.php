@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Learntheme;
+use App\Models\Big_theme;
 
 class CheckController extends Controller
 {
@@ -57,20 +58,29 @@ class CheckController extends Controller
                 }
             }
         }
+        
+        //   内容が必須のリストは内容必須
+        $must_conf_base=Big_theme::where("cont_which","=",1)->get();
 
-           switch($big_theme){
-           case "Q_A":
+        foreach($must_conf_base as $m_conf){
+           if($big_theme===$m_conf->big_theme){
               if(empty($contents)){
-                 return "問題は内容に入力してください";
-              }
-           break;
-           case "PHP":
-            if(empty($contents)){
-               return "内容は入力してください";
-            }   
-           default:
-           break;
-          }
+                return "内容は入力してください";
+             }   
+            }else{
+               if(!empty($contents)){
+                  return "内容は入力しないでください";
+               }   
+           }
+        }
+
+        
+      //   Q&Aなら内容必須
+        if($big_theme==="Q&A"){
+           if(empty($contents)){
+              return "問題は内容に入力してください";
+           }
+        }
         
         return "ok";
       }

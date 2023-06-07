@@ -38,17 +38,25 @@ Route::patch("patch/conscious",([PatchController::class,"edit_conscious"]))
 Route::delete("delete/conscious",([PatchController::class,"delete_conscious"]))
 ->name("delete_conscious_route");
 
-// 初期設定/設定変更のページへ
+// 初期設定/設定追加のページへ
 Route::get("config/config",[ConfigController::class,"conf_base"])
 ->name("configroute");
 
-// // 初期設定のpost
-// Route::post("config/conf_post",[ConfigController::class,"conf_add"])
-// ->name("conf_add_route");
+// 設定追加のpost
+Route::post("config/conf_add",[ConfigController::class,"conf_add"])
+->name("conf_add_route");
 
-// 設定変更のpost
-Route::patch("config/conf_patch",[ConfigController::class,"conf_edit"])
+// 既存設定編集のページ
+Route::get("config/exist_edit",[ConfigController::class,"conf_edit"])
 ->name("conf_edit_route");
+
+// 設定から大テーマ編集のpatch
+Route::patch("config/conf_patch{post}",[ConfigController::class,"conf_patch"])
+->name("conf_patch_route");
+
+// // 設定から内容変更のpatch
+// Route::patch("config/conf_toggle",[ConfigController::class,"conf_cont_toggle"])
+// ->name("conf_cont_toggle_route");
 
 // // 設定から大テーマ削除のpost
 // Route::delete("config/conf_delete",[ConfigController::class,"conf_delete"])

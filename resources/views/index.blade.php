@@ -93,14 +93,14 @@
 
 
  <div class="edit_decide_item_frame">
-  <label class="edit_decide_item" for="change_what">変更する項目：<span id="change_words">まだ選択されていません</span>
+  <label class="edit_decide_item">変更する項目：<span id="change_words">まだ選択されていません</span>
   <input type="hidden" id="edit_item_id" name="edit_item_id">
   </label>
  </div>
 
  <div class="edit_decide_name_frame">
   <label  class="edit_decide_name" for="change_name">変更後の名称
-     <input id="chagne_name" type="text" name="after_edit_name">
+     <input id="change_name" type="text" name="after_edit_name">
   </label>
   @error('after_edit_name')
     <p class="if_error"> {{$message}}</p>

@@ -24,7 +24,7 @@ class PatchController extends Controller
         $edit_item_id=$request->edit_item_id;
         $after_edit_name=$request->after_edit_name;
         $cate=$request->category;
-        
+
         if(empty($big_theme) ||empty($small_theme) ||empty($after_edit_name) ||empty($cate)){
             throw new \PDOException("何らかのデータが入力できていません");
         }
