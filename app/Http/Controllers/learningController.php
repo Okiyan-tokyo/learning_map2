@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Learntheme;
+use App\Models\Big_Theme;
 use App\Http\Requests\Learning_Requests;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\CheckController;
@@ -11,7 +12,7 @@ use App\Http\Controllers\CheckController;
 class learningController extends Controller
 {   
 
-   static $big_array=["PHP","Laravel","Javascript","html/css","Environment","Q_A"];
+   // static $big_array=["PHP","Laravel","Javascript","html/css","Environment","Q_A"];
 
    static public function h($moji){
       return htmlspecialchars($moji);
@@ -20,11 +21,23 @@ class learningController extends Controller
 
    public function showindex(){
 
+      $big_array=[];
+      $big_theme_base=Big_theme::select("big_theme")->get();
+      
+      foreach($big_theme_base as $b){
+         $big_array[]=$b->big_theme;
+      }
+      $big_array[]="Q&A";
+
+
+      $cont_must_for_index=Big_theme::where("cont_which","=",1)->pluck('big_theme');
+
+
+
       $small_full=[];
       $cont_require_full=[];
 
-
-      foreach(self::$big_array as $b){
+      foreach($big_array as $b){
          // bは確実に上記列のどれか
          $small_by_big=Learntheme::select("id","small_theme")->where("big_theme","=",$b)->get();
          if(!empty($small_by_big)){
@@ -75,9 +88,10 @@ class learningController extends Controller
       }  
       
       return view("index")->with([
-         "big_array"=>self::$big_array,
+         "big_array"=>$big_array,
          "small_array"=>$small_full,
-         "cont_array"=>$cont_require_full
+         "cont_array"=>$cont_require_full,
+         "cont_must_for_index"=>$cont_must_for_index
       ]);
    }
 
@@ -127,11 +141,10 @@ class learningController extends Controller
             if($check_class->url_check($r1,$r2,$r6)!=="ok"){
                $returnvalue[]=$check_class->url_check($r1,$r2,$r6);
             }
-            
+         
 
             // 条件を満たしていない場合は例外を投げる
             if(!empty($returnvalue)){
-
                $returnword=implode("\n",$returnvalue);
                throw new \PDOException($returnword);
             }
@@ -152,7 +165,6 @@ class learningController extends Controller
             }
 
             $posts->url=$r6;
-
             $posts->save();
             DB::commit();
          }catch(\PDOException $e){

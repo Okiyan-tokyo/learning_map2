@@ -1,4 +1,6 @@
-  // edit処理
+"use strict"
+
+// edit処理
 $(()=>{
 
 // ①大テーマのchange(functionでまとめたい)
@@ -41,6 +43,9 @@ for(let id_num=2;id_num<4;id_num++){
     // 参照を初期化
     // refer_auto_format(id_num);
 
+    // 変更するテーマの入力状況
+    change_kind_change(id_num);
+
     // 入力初期化
     auto_input(id_num);
 
@@ -49,7 +54,7 @@ for(let id_num=2;id_num<4;id_num++){
   // 内容を小テーマで変換
   $("#select_small_theme"+id_num).change(()=>{
     // PHPとクイズの場合のみ追加！
-    if(["PHP","Q_A"].includes($("#big_theme"+id_num).val())){
+    if($("#cont_must_for_index").val().includes($("#big_theme"+id_num).val())){
       cont_auto_format(id_num,"y");
       cont_from_small_change(id_num);
     }
@@ -120,9 +125,32 @@ function cont_from_small_change(id_num){
 }
 
 
+// 大テーマ変更によるテーマ選択の変更
+function change_kind_change(id_num){
+  // 内容を非表示にする場合
+    if(!$("#cont_must_for_index").val().includes($("#big_theme"+id_num).val())){
+
+      // 以下の例文コードを行う！
+      // 特定のオプションタグを非表示にする方法
+    //       var select = document.getElementById("mySelect");  // <select>要素を取得
+
+    // for (var i = 0; i < select.options.length; i++) {
+    //   var option = select.options[i];  // 各<option>要素を取得
+
+    //   if (option.value === "hide") {
+    //     option.style.display = "none";  // 特定の値を持つ<option>要素を非表示にする
+    //   }
+    // }
+    }
+  // URLを非表示にする場合
+
+}
+
+
 
 // 名称を自動入力
 function auto_input(id_num){
+
 
     switch($("#change_kind").val()){
       case "small_theme":
@@ -132,7 +160,7 @@ function auto_input(id_num){
       break;
 
       case "contents":
-        if(["PHP","Q_A"].includes($("#big_theme"+id_num).val())){
+        if($("#cont_must_for_index").val().includes($("#big_theme"+id_num).val())){
           // 他のchange_kindからcontentsに移動した時のみ表示を再設定
           if($("#cont_change"+id_num).css("opacity")=="0.3"){
             cont_auto_format(id_num,"y");
@@ -153,7 +181,7 @@ function auto_input(id_num){
       let select_bool=true;
 
 
-      if(["PHP","Q_A"].includes($("#big_theme").val())){
+      if($("#cont_must_for_index").val().includes($("#big_theme").val())){
 
         refer_base=[$("$big_theme"+id_num).val(),$("select_small_theme"+id_num).val(),$("$cont_change"+id_num).val()];
       }else{
@@ -180,6 +208,10 @@ function auto_input(id_num){
       break;
 
       case "URL":
+
+
+
+
         $("#change_words").val();
       break;
     }

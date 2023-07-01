@@ -1,5 +1,5 @@
 <div class="big_frame">
-  <label for="big_theme">大テーマ</label>
+  <label>大テーマ</label>
 <select name="big_theme" id="big_theme{{$id_num}}">
     <option hidden>選択してください</option>
     @foreach ($big_array as $big_str)
@@ -9,7 +9,7 @@
   </div>
 
  <div class="small_frame">
-  <label for="small_theme">小テーマ</label>
+  <label>小テーマ</label>
   <select name="small_theme" id="select_small_theme{{$id_num}}">
     <option hidden value="no_select">選択してください</option>
         @foreach($big_array as $each_big)
@@ -25,7 +25,7 @@
   </div> 
 
  <div class="cont_frame">
-  <label for="cont_change">内容</label>
+  <label>内容</label>
  <select name="cont_change{{$id_num}}" id="cont_change{{$id_num}}">
     <option hidden value="no_select">選択してください</option>
     {{-- 大テーマを見ていく --}}
@@ -38,7 +38,7 @@
       <optgroup  class="optg_c{{$id_num}}" data-small_theme{{$id_num}}="{{$small_parts["small_theme"]}}" label="{{$small_parts["small_theme"]}}">
         @foreach ($cont_array[substr($each_big,0,3)."_".$small_parts["small_theme"]] as $cont_parts)
         ))
-        <option class="cont_option" data-this_id="{{$cont_parts["id"]}}">{{$cont_parts["contents"]}}</option>
+        <option class="cont_option" data-this_id="{{$cont_parts["id"]}}" value="{{$cont_parts["contents"]}}">{{$cont_parts["contents"]}}</option>
         @endforeach 
       </optgroup>
       @endif

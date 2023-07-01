@@ -1,7 +1,24 @@
 $(()=>{
 
+  $("#config_button_div").css("display","none")
+
   // 大テーマ→内容
   $("#conf_big_to_cont").click(()=>{
+
+
+    // １つも入力されていなければ戻る
+    let conf_big_input=false;
+    $(".conf_big_theme").each((i,elem)=>{
+      if($(elem).val()!==""){
+        conf_big_input=true;
+      }
+    })
+    if(!conf_big_input){
+      alert("１つも入力されていません");
+      return;
+    }
+
+    // 表示変更
     $(".conf_choise_cont_div").css("display","block");
     $(".conf_choise_cont_div").css("opacity","1");
     $(".conf_big_theme_div").css("opacity","0.3");
@@ -37,6 +54,7 @@ $(()=>{
       $(".conf_file_div").css("opacity","1");
       $(".conf_cont_which_input").css("pointer-events","none");
       $("#conf_cont_span_sets").css("display","none");
+      $("#config_button_div").css("display","block");
 
       // テーマの入力
     $(".conf_big_theme").each((i,elem)=>{
@@ -59,8 +77,10 @@ $(()=>{
       $(".conf_cont_which_input").css("pointer-events","auto");
       $("#conf_cont_span_sets").css("display","block");
       $("#conf_back_cont").css("display","none");
-  
+      $("#config_button_div").css("display","none");
+
     })
+
 
 
 })

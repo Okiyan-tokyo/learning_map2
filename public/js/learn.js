@@ -1,4 +1,7 @@
+"use strict"
+
 $(()=>{
+
 
 // Read処理
 
@@ -34,12 +37,12 @@ $(".read_big_theme").mouseover((e)=>{
     })
   })
 })
-    
+  
   
 // eachtitleの上とadd_formの下は強制的に表示を消す
 $("body").mousemove((e)=>{
-  let big_top=$(".each_title").offset().top;
-  let add_top=$(".add_form").offset().top;
+  let big_top=$(".each_title").eq(0).offset().top;
+  let add_top=$(".crud_list").eq(0).offset().top;
   if(big_top>e.clientY || add_top<e.clientY){
     $(".read_contents_cont").css("display","none");
     $(".read_contents_small").css("display","none");

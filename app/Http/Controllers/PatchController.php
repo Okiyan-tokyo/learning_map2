@@ -7,6 +7,7 @@ use App\Models\Learntheme;
 use App\Http\Requests\Edit_Requests;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\CheckController;
+use App\Models\Big_theme;
 
 class PatchController extends Controller
 {
@@ -16,48 +17,55 @@ class PatchController extends Controller
         $check_class=new CheckController();
 
         try{
-    
+            
          DB::transaction(function()use($request,$check_class){
-
+        
         $big_theme=$request->big_theme;
-        $small_theme=$request->small_theme;
+        $small_theme=$request->small_theme;        
+        $edit_contents=$request->cont_change2;
         $edit_item_id=$request->edit_item_id;
         $after_edit_name=$request->after_edit_name;
         $cate=$request->category;
-        
+
         if(empty($big_theme) ||empty($small_theme) ||empty($after_edit_name) ||empty($cate)){
             throw new \PDOException("何らかのデータが入力できていません");
         }
 
-        if(!(in_array($big_theme,["PHP","Q_A"]) && $cate==="small_theme") && empty($edit_item_id)){
-            throw new \PDOException("何らかのエラーです");
-        }
-
+    
         // エラーのフラグ
         $returnvalue=[];
 
-        // PHPかクイズでかつ小テーマ変更のフラグ
-        if(in_array($big_theme,["PHP","Q_A"]) && $cate==="small_theme"){
-            $php_or_quiz=true;
-        }else{
-            $php_or_quiz=false;
-        }
+        // contentsが必要かでパターンわけ
+        $must_cont_lists=Big_theme::where("cont_which","=",1)->pluck("big_theme")->toArray();
 
-        if($php_or_quiz){
-            $change_set=Learntheme::select("id","big_theme","small_theme")->where([
-                ["big_theme","=",$big_theme],
-                ["small_theme","=",$small_theme],
-            ])->get();
-        }else{
-            $change_set=Learntheme::find($edit_item_id);
-            // コードを短種する
-            $c1=$change_set->big_theme;
-            $c2=$change_set->small_theme;
-            $c3=$change_set->contents;
-            $c4=$change_set->reference;
-            $c5=$change_set->concsious;
-            $c6=$change_set->url;
+        $cont_pattern=false;
+
+        if(in_array($big_theme,$must_cont_lists)){
+            $cont_pattern=true;
         }
+    
+        // contentsあり版
+      if($cont_pattern){
+          $change_set=Learntheme::where([
+              ["big_theme","=",$big_theme],
+              ["small_theme","=",$small_theme],
+              ["contents","=",$edit_contents],
+          ])->get();
+        }else{
+            $change_set=Learntheme::where([
+                ["big_theme","=",$big_theme],
+                ["small_theme","=",$small_theme]
+            ])->get();
+        }
+        // 内容なしの場合コードを短種する
+
+          $c1=$change_set[0]->big_theme;
+          $c2=$change_set[0]->small_theme;
+          $c3=$change_set[0]->contents;
+          $c4=$change_set[0]->reference;
+          $c5=$change_set[0]->concsious;
+          $c6=$change_set[0]->url;
+
 
             switch($cate){
                 case "small_theme":
@@ -66,29 +74,15 @@ class PatchController extends Controller
                     if($small_isok!=="ok"){
                         $returnvalue[]=$small_isok;
                     }
-                    // phpとクイズの場合、idが一意に決まらない
-                    if(!$php_or_quiz){
+                // 内容必要かによってパターン分け
+                   if(!$cont_pattern){
                         $change_set->small_theme=$after_edit_name;
-                      }else{
+                        }else{
                         foreach($change_set as $c){
-                        // ここだけtransaction内で別処理のsaveになってしまう！！
-                            $original[$c->id]=$c->small_theme;
-                            $c->small_theme=$after_edit_name;
-                            $c->save();
-                            
-                            // エラーの場合（どう定義する？）
-                            // if(error){ $c->small_theme=$original[$c->id]};
-
+                        $c->small_theme=$after_edit_name;
                         }
-                     }
+                    }
                 break;
-
-                // PHPとQ_Aのカテゴリーを変更したい場合
-                case "small_category_change":
-
-                break;
-
-
 
                 case "contents":
                     // 内容は通常チェックと同じ
@@ -96,7 +90,7 @@ class PatchController extends Controller
                         $returnvalue[]=$check_class->cont_check($c1,$c2,$after_edit_name);
                         $returnvalue[]=$check_class->cont_check($c1,$c2,$after_edit_name);
                     }else{
-                        $change_set->contents=$after_edit_name;
+                        $change_set[0]->contents=$after_edit_name;
                     }                
                 break;
                 case "reference":
@@ -104,15 +98,21 @@ class PatchController extends Controller
                     if($check_class->refer_check($c1,$after_edit_name)!=="ok"){
                         $returnvalue[]=$check_class->refer_check($c1,$after_edit_name);
                     }else{
-                        $change_set->reference=$after_edit_name;
+                        $change_set[0]->reference=$after_edit_name;
                     }                  
                 break;
                 case "URL":
-                // URLは通常チェックと同じ
+                    if($cont_pattern){
+                        // 内容設定あり＝そもそも内容まで設定されていなければエラー
+                        if(empty($request->cont_change2) ||$request->cont_change2==="no_select"){
+                        throw new \PDOException("内容を設定してください");
+                      }
+                    }
+                    // URLのチェック
                     if($check_class->url_check($c1,$c2,$after_edit_name)!=="ok"){
-                        $returnvalue[]=$check_class->refer_check($c1,$c2,$after_edit_name);
+                        $returnvalue[]=$check_class->url_check($c1,$c2,$after_edit_name);
                     }else{
-                        $change_set->URL=$after_edit_name;
+                        $change_set[0]->URL=$after_edit_name;
                     }   
                 break;
             }
@@ -120,9 +120,7 @@ class PatchController extends Controller
             if(!empty($returnvalue)){
                 throw new \PDOException(implode("\n",$returnvalue));
             }
-            if(!$php_or_quiz){
-                $change_set->save();
-            }
+          $change_set[0]->save();
         });
 
     }catch(\PDOException $e){

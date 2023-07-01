@@ -16,13 +16,24 @@ final class Conf_BigTheme extends Enum
     const html_and_php = 3;
     const no_file = 4;
 
+    // 英語で表示した配列を返す
+    static public function engDescription(){
+        $description_array=[];
+        for($n=1;$n<5;$n++){
+            $eng_description=self::getDescription($n);
+            array_push($description_array,$eng_description);
+        }
+        return $description_array;
+    }
+
     // 日本語で表示した配列を返す
    static public function jpnDescription(){
+       $engArray=self::engDescription();
         $jpn_descriptions=[
-            "HTML",
-            "PHP",
-            "HTML/PHP両方",
-            "作成しない"
+            $engArray[0]=>"HTML",
+            $engArray[1]=>"PHP",
+            $engArray[2]=>"HTML/PHP両方",
+            $engArray[3]=>"作成しない"
         ];
         return $jpn_descriptions;
     }

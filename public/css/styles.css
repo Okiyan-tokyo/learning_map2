@@ -98,12 +98,16 @@ h1{
 }
 
 
-.plus_button_div{
+.plus_button_div,#config_button_div,#existconfig_button_div{
   margin-top: 10px;
   text-align: center;
 }
 
-.add_theme,.if_error{
+#config_button_div{
+  margin-bottom: 10px;
+}
+
+.add_theme,.if_error,.conf_message{
   color:red;
   animation-name:add_anime;
   animation-duration:2s;
@@ -149,6 +153,7 @@ h1{
 button{
   font-size: 0.9em;
 }
+
 
 /* inputとselectの微修正 */
 input,select{
@@ -202,7 +207,15 @@ fieldset{
   text-align: center;
 }
 
-.conf_change_form{
+.exist_bigtheme_edit_form{
+  display:none;
+}
+
+#go_to_exist_conf{
+  text-align: center;
+}
+
+.conf_change_form,.exist_bigtheme_edit_bigclass{
   margin-right: auto;
   margin-left: auto;
   width:80%;
@@ -212,7 +225,8 @@ fieldset{
   border-radius: 10px;
 }
 
-.conf_big_theme_div,.conf_choise_cont_div,.conf_file_div{
+
+.conf_big_theme_div,.conf_choise_cont_div,.conf_file_div,.existconf_div{
   border-bottom: white dashed 1px;
   margin-top: 8px;
   padding:20px;
@@ -231,11 +245,15 @@ fieldset{
   margin-top: 10px;
 }
 
+.non_operate_li{
+  text-align: left;
+}
+
 .conf_choise_p,.conf_which_sets,.conf_file_div{
   text-align: left;
 }
 
-#conf_big_to_cont,#conf_back_cont{
+#conf_big_to_cont,#conf_back_cont,#existconf_back2,#existconf_next1{
   display: block;
   text-decoration: underline;
   margin-top: 15px;
@@ -252,7 +270,7 @@ fieldset{
   transform: translateY(-5px);
 }
 
-#conf_cont_spanSets{
+#conf_cont_spanSets,#existconf_spanSets{
   display:flex;
   justify-content: space-between;
   margin-top: 15px;
@@ -265,7 +283,7 @@ fieldset{
 }
 
 
-#conf_cont_to_file,#conf_back_bigTheme{
+#conf_cont_to_file,#conf_back_bigTheme,#existconf_next2,#existconf_back1{
   text-decoration: underline;
   text-align: center;
   cursor: pointer;
@@ -286,4 +304,88 @@ fieldset{
 .back_home{
   text-align: center;
   color:white;
+}
+
+
+/* exist_confページ */
+
+#existconf_spanSets{
+  margin-left: auto;
+  margin-right: auto;
+  width:50%;
+  min-width: 100px;
+}
+
+.existconf_radioparts_fulldiv{
+  width:80%;
+  margin-left: auto;
+  margin-right: auto;
+  border:white dashed 1px;
+  border-radius: 5px;
+  padding:10px;
+  text-align: left;
+}
+
+.existconf_radioparts_fulldiv2{
+  padding:3px;
+  text-align: center;
+}
+
+.existconf_radioparts_fulldiv2>p{
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.type2_each_div{
+  margin-top: 10px;
+  margin-bottom: 5px;
+  width:80%;
+  min-width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.exist_conf_type2_p{
+  text-align: left;
+  width:90%;
+  min-width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#existconf_namechanege{
+  display:inline-block;
+  width:90%;
+  min-width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  height:30px;
+  line-height:30px;
+  font-size: 1.1em;
+}
+
+.existconf_radiosets_type2{
+  width:90%;
+  min-width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+#existconf_button_div{
+  display:none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* brセット */
+.br500{
+  display:none;
+}
+
+@media screen and (max-width:500px){
+ .br500{
+   display: inline;
+ }
 }

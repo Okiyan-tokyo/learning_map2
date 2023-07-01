@@ -6,7 +6,7 @@
     @csrf
     
     <div class="big_frame">
-    <label for="big_theme">大テーマ</label>
+    <label>大テーマ</label>
     <select name="big_theme" id="big_theme">
       <option hidden>選択してください</option>
       @foreach ($big_array as $big_str)
@@ -14,12 +14,12 @@
       @endforeach
     </select>
     </div>
-    @error('big_theme')
-       <p class="if_error"> {{$message}}</p>
-    @enderror
+
+    {{-- エラーページ --}}
+    @include("view_error",(["type"=>"big_theme"]))    
     
     <div class="small_frame">
-    <label for="small_theme">小テーマ</label>
+    <label>小テーマ</label>
     <div id="small_theme">
       
       <label for="small_exist">
@@ -41,7 +41,7 @@
         @endforeach
         </select>
       <br>
-      <label for="small_new">
+      <label>
       <input id="small_new" type="radio" name="small_which" value="new">
       新規テーマ</label>
       <input id="input_small_theme"  type="text">
@@ -49,30 +49,35 @@
     </div>
   </div>
   
-  @error('small_theme')
-    <p class="if_error"> {{$message}}</p>
-  @enderror
+  @include("view_error",(["type"=>"small_theme"]))    
   
   
     <div class="cont_frame">
-    <label for="contents">内容（クイズなら問題）</label>
+    <label>内容（クイズなら問題）</label>
     <input name="contents" type="text"  id="contents" value={{old("contents")}}>
     </div>
-  
+
+    {{-- エラーページ --}}
+    @include("view_error",(["type"=>"contents"]))    
+
     <div class="refer_frame">
-    <label for="reference">参考（クイズなら解答）</label>
+    <label>参考（クイズなら解答）</label>
     <input name="reference" type="text"  id="references" value={{old("reference")}}>
     </div>
     
     <div class="conscious_frame">
-    <label for="conscious" class="counscious_list">意識することリスト</label>
+    <label class="counscious_list">意識することリスト</label>
     <textarea name="conscious" id="conscious" placeholder="空白可。改行で内容を区切ってください" rows="10">{{old("conscious")}}</textarea>
     </div>
     
     <div class="cont_frame">
-      <label for="linkurl">URL</label>
+      <label>URL</label>
       <input name="linkurl" type="text"  id="linkurl" value={{old("linkurl")}}>
     </div>
+
+   {{-- エラーページ --}}
+    @include("view_error",(["type"=>"linkurl"]))    
+    
   
       <div class="plus_button_div">
         <button>追加！</button>
