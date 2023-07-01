@@ -27,12 +27,13 @@ class Learning_Requests extends FormRequest
         //大テーマを配列に直す 
 
         $big_array=[];
-        $big_theme_base=Big_theme::select("big_theme");
+        $big_theme_base=Big_theme::select("big_theme")->get();
         foreach($big_theme_base as $b){
-            $big_theme_base[]=$b->big_theme;
+            $big_array[]=$b->big_theme;
         }
 
         $rgxstr=implode("|",$big_array)."|Q&A";
+        
 
         return [
             "big_theme"=>[

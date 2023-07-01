@@ -22,16 +22,16 @@ class CheckController extends Controller
     switch($request->small_which){
        case "exists":
           if(!$is_small_exist->isNotEmpty()){
-             return "テーマがありません";
+             return "小テーマがありません";
           }   
        break;
        case "new":
           if($is_small_exist->isNotEmpty()){
-             return "既存テーマです";
+             return "小テーマが既存です";
           }   
        break;
        default:
-        return "選択されていません";
+        return "小テーマの既存/新規にチェックを入れてください";
        break;
     }
     return "ok";
@@ -60,19 +60,16 @@ class CheckController extends Controller
         }
         
         //   内容が必須のリストは内容必須
-        $must_conf_base=Big_theme::where("cont_which","=",1)->get();
-
-        foreach($must_conf_base as $m_conf){
-           if($big_theme===$m_conf->big_theme){
+        $the_theme=Big_theme::where("big_theme","=",$big_theme)->get();
+           if($the_theme[0]->cont_which){
               if(empty($contents)){
                 return "内容は入力してください";
-             }   
+             } 
             }else{
                if(!empty($contents)){
                   return "内容は入力しないでください";
                }   
            }
-        }
 
         
       //   Q&Aなら内容必須
@@ -111,71 +108,66 @@ class CheckController extends Controller
 
 // URLのチェック
     public function url_check($big_theme,$small_theme,$linkurl){
-        
-        // 必ず英数字のみ（空白以外）
-        switch($big_theme){
-            case "PHP":
 
-       // 最後はPHP 必ず選択
-                if(empty($linkurl)){
-                return "URLは必ず入力してください";
-                } 
-                if(substr($linkurl,-4)!==".php"){
-                return "リンクの拡張子をPHPにしてください";
-                }
+      // Q&Aの場合
+      if($big_theme==="Q&A"){
+         if(!empty($linkurl)){
+            return "URLは空白にしてください";
+         }
+      }
 
-        //  重複確認
+      //  重複確認
+      // URLなしの場合は除く
+      $url_none=Big_theme::where("file_which","=","No file")->pluck("big_theme")->toArray();
+      if(!in_array($big_theme,$url_none)){
+         $exists_lists=Learntheme::select("url")->where([["big_theme","=",$big_theme]])->get();
+         foreach($exists_lists as $e){
+            if(strtolower($e["url"])===strtolower($linkurl)){
+                     return "そのURLは既に存在しています";
+            }
+         }
+      }
+      
 
-                $exists_lists=Learntheme::select("url")
-                    ->where([
-                    ["big_theme","=",$big_theme],
-                    ["small_theme","=",$small_theme]
-                    ])
-                    ->get();
-                foreach($exists_lists as $e){
-                    if(strtolower($e["url"])===strtolower($linkurl)){
-                            return "そのURLは既に存在しています";
-                    }
-                 }
+      //  big_themeごとのurlタイプの取得
+      $url_type=Big_theme::where("big_theme","=",$big_theme)->get();
 
-           break;
-           case "Laravel":
-              // テーマごとに別々のリストが作成される
-              if(!empty($linkurl)){
-                 return "URLは空白にしてください(自動で作成します)";
-              } 
-           break;
-           case "Javascript":
-           case "html/css":
-           case "environment":
-              if(empty($linkurl)){
-                 return "URLは必ず入力してください";
-              } 
-              if(substr($linkurl,-4)!==".php"
-                 && substr($linkurl,-5)!==".html"
-              ){
-                 return "リンクの拡張子をHTMLかPHPにしてください";
-              }
+      switch(strtolower($url_type[0]->file_which)){
+         case "html only":
+            if(empty($linkurl)){
+               return "URLは必ず入力してください";
+               } 
+            if(substr($linkurl,-5)!==".html"){
+               return "リンクの拡張子をhtmlにしてください";
+            }
+         break;
+         case "php only":
+            if(empty($linkurl)){
+               return "URLは必ず入力してください";
+            } 
+            if(substr($linkurl,-4)!==".php"){
+            return "リンクの拡張子をPHPにしてください";
+            }
+         break;
+         case "html and php":
+            if(empty($linkurl)){
+               return "URLは必ず入力してください";
+            } 
+            if(substr($linkurl,-4)!==".php"
+               && substr($linkurl,-5)!==".html"
+            ){
+               return "リンクの拡張子をHTMLかPHPにしてください";
+            }
+         break;
+         case "no file":
+            if(!empty($linkurl)){
+               return "URLは空白にしてください";
+            }
+         break;
+         default:
+         break;
+      }        
 
-        //  重複確認
-            $exists_lists=Learntheme::select("url")
-            ->where([
-            ["big_theme","=",$big_theme]
-            ])
-            ->get();
-            foreach($exists_lists as $e){
-                if(strtolower($e["url"])===strtolower($linkurl)){
-                        return "そのURLは既に存在しています";
-                }
-             }
-
-           break;
-           case "Q_A":
-              if(!empty($linkurl)){
-                 return "リンクは無効です";
-              }
-           break;
-        }
         return "ok";
     }
 

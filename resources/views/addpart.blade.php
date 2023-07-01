@@ -14,9 +14,9 @@
       @endforeach
     </select>
     </div>
-    @error('big_theme')
-       <p class="if_error"> {{$message}}</p>
-    @enderror
+
+    {{-- エラーページ --}}
+    @include("view_error",(["type"=>"big_theme"]))    
     
     <div class="small_frame">
     <label>小テーマ</label>
@@ -49,16 +49,17 @@
     </div>
   </div>
   
-  @error('small_theme')
-    <p class="if_error"> {{$message}}</p>
-  @enderror
+  @include("view_error",(["type"=>"small_theme"]))    
   
   
     <div class="cont_frame">
     <label>内容（クイズなら問題）</label>
     <input name="contents" type="text"  id="contents" value={{old("contents")}}>
     </div>
-  
+
+    {{-- エラーページ --}}
+    @include("view_error",(["type"=>"contents"]))    
+
     <div class="refer_frame">
     <label>参考（クイズなら解答）</label>
     <input name="reference" type="text"  id="references" value={{old("reference")}}>
@@ -73,6 +74,10 @@
       <label>URL</label>
       <input name="linkurl" type="text"  id="linkurl" value={{old("linkurl")}}>
     </div>
+
+   {{-- エラーページ --}}
+    @include("view_error",(["type"=>"linkurl"]))    
+    
   
       <div class="plus_button_div">
         <button>追加！</button>

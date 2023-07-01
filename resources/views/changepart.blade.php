@@ -38,7 +38,7 @@
       <optgroup  class="optg_c{{$id_num}}" data-small_theme{{$id_num}}="{{$small_parts["small_theme"]}}" label="{{$small_parts["small_theme"]}}">
         @foreach ($cont_array[substr($each_big,0,3)."_".$small_parts["small_theme"]] as $cont_parts)
         ))
-        <option class="cont_option" data-this_id="{{$cont_parts["id"]}}">{{$cont_parts["contents"]}}</option>
+        <option class="cont_option" data-this_id="{{$cont_parts["id"]}}" value="{{$cont_parts["contents"]}}">{{$cont_parts["contents"]}}</option>
         @endforeach 
       </optgroup>
       @endif

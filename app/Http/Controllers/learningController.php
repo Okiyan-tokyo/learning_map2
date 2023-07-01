@@ -29,9 +29,13 @@ class learningController extends Controller
       }
       $big_array[]="Q&A";
 
+
+      $cont_must_for_index=Big_theme::where("cont_which","=",1)->pluck('big_theme');
+
+
+
       $small_full=[];
       $cont_require_full=[];
-
 
       foreach($big_array as $b){
          // bは確実に上記列のどれか
@@ -86,7 +90,8 @@ class learningController extends Controller
       return view("index")->with([
          "big_array"=>$big_array,
          "small_array"=>$small_full,
-         "cont_array"=>$cont_require_full
+         "cont_array"=>$cont_require_full,
+         "cont_must_for_index"=>$cont_must_for_index
       ]);
    }
 
@@ -136,11 +141,10 @@ class learningController extends Controller
             if($check_class->url_check($r1,$r2,$r6)!=="ok"){
                $returnvalue[]=$check_class->url_check($r1,$r2,$r6);
             }
-            
+         
 
             // 条件を満たしていない場合は例外を投げる
             if(!empty($returnvalue)){
-
                $returnword=implode("\n",$returnvalue);
                throw new \PDOException($returnword);
             }
@@ -161,7 +165,6 @@ class learningController extends Controller
             }
 
             $posts->url=$r6;
-
             $posts->save();
             DB::commit();
          }catch(\PDOException $e){
