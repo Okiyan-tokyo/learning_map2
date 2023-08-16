@@ -86,7 +86,7 @@ h1{
   border-bottom: white dashed 1px;
 }
 
-#conscious{
+#conscious,#edit_conscious_textarea{
   width:95%;
   margin-left: auto;
   margin-right: auto;
@@ -109,9 +109,9 @@ h1{
 
 .add_theme,.if_error,.conf_message{
   color:red;
-  animation-name:add_anime;
+  /* animation-name:add_anime;
   animation-duration:2s;
-  animation-fill-mode:forwards;
+  animation-fill-mode:forwards; */
   height:30px;
   line-height: 30px;
   margin-bottom: 0;

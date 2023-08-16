@@ -4,7 +4,7 @@
 $(()=>{
 
 // ①大テーマのchange(functionでまとめたい)
-for(let id_num=2;id_num<4;id_num++){
+for(let id_num=2;id_num<5;id_num++){
 
   // 初期状態ではsmall_themeと内容は選択不可に
   $("#select_small_theme"+id_num).css("opacity","0.3");
@@ -51,20 +51,32 @@ for(let id_num=2;id_num<4;id_num++){
 
   })
 
+  // 小テーマが変化した時
   // 内容を小テーマで変換
   $("#select_small_theme"+id_num).change(()=>{
-    // PHPとクイズの場合のみ追加！
+    // 内容必ず組は変更、意識することもリストも内容必ず組はいらない
     if($("#cont_must_for_index").val().includes($("#big_theme"+id_num).val())){
       cont_auto_format(id_num,"y");
       cont_from_small_change(id_num);
+      auto_input(id_num);
+    }else if(id_num===3){
+     // 内容必ず組ではない時、かつ意識変更の際
+     // 意識することの記入
+     set_conscious_to_html(base64_to_string($("#conscious_sets_by_json").val()),false)
     }
-    auto_input(id_num);
   })
+
 
   // 内容が変化したらinputの内容を変更
   $("#cont_change"+id_num).change(()=>{
-    // inputの内容を変更
-    auto_input(id_num); 
+    if(id_num===3){
+      // 内容ありの意識変更の際
+      set_conscious_to_html(base64_to_string($("#conscious_sets_by_json").val()),true)
+    }else{
+      // 意識変更ではない場合
+      // inputの内容を変更
+      auto_input(id_num); 
+    }
   })
 
   
@@ -77,6 +89,39 @@ for(let id_num=2;id_num<4;id_num++){
   }
 
 }
+
+
+// 意識することにセット
+function set_conscious_to_html(all_data,which){
+  const its_small=($("#select_small_theme3").val()) 
+
+  all_data.forEach((aaa)=>{
+    // contentが必要かで処理を分ける
+    if(which){
+      if(aaa.big_theme===$("#big_theme3").val() 
+      && aaa.small_theme===$("#select_small_theme3").val()
+      && aaa.contents===$("#cont_change3").val()
+      ){
+        $("#edit_conscious_textarea").text(aaa.conscious);
+      }
+    }else{
+      if(aaa.big_theme===$("#big_theme3").val() 
+      && aaa.small_theme===$("#select_small_theme3").val()
+      ){
+        $("#edit_conscious_textarea").text(aaa.conscious);
+      }
+    }
+  })
+
+}
+
+// base64→string
+function base64_to_string(compressData){
+  const decodeData=atob(compressData);
+  return JSON.parse(pako.inflate(decodeData, { to: 'string' }));
+}
+
+
 
 
 // 内容の初期化
@@ -114,14 +159,6 @@ function cont_from_small_change(id_num){
       }
     })
     
-    
-    // 内容のselectboxが変化しない！！
-    
-    
-    
-    // 内容が変化した際のcss
-
-    
 }
 
 
@@ -150,7 +187,6 @@ function change_kind_change(id_num){
 
 // 名称を自動入力
 function auto_input(id_num){
-
 
     switch($("#change_kind").val()){
       case "small_theme":
@@ -183,7 +219,7 @@ function auto_input(id_num){
 
       if($("#cont_must_for_index").val().includes($("#big_theme").val())){
 
-        refer_base=[$("$big_theme"+id_num).val(),$("select_small_theme"+id_num).val(),$("$cont_change"+id_num).val()];
+        refer_base=[$("$big_theme"+id_num).val(),$("#select_small_theme"+id_num).val(),$("#cont_change"+id_num).val()];
       }else{
         refer_baset=[$("#big_theme"+id_num).val(),$("#select_small_theme"+id_num).val()];
        }
@@ -219,6 +255,9 @@ function auto_input(id_num){
       $("#change_words").text("未選択");
     }
 }
+
+
+// 意識することリストに自動入力
 
 
 

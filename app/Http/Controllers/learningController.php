@@ -86,12 +86,20 @@ class learningController extends Controller
          }
 
       }  
+
+
+      // 意識することリストを返す
+      $conscious_list=Learntheme::select("id","big_theme","small_theme","contents","conscious")->get();
+
+
+      $base64_conscious = base64_encode(gzencode(json_encode($conscious_list),9));
       
       return view("index")->with([
          "big_array"=>$big_array,
          "small_array"=>$small_full,
          "cont_array"=>$cont_require_full,
-         "cont_must_for_index"=>$cont_must_for_index
+         "cont_must_for_index"=>$cont_must_for_index,
+         "base64_conscious"=>$base64_conscious
       ]);
    }
 
@@ -169,7 +177,7 @@ class learningController extends Controller
             DB::commit();
          }catch(\PDOException $e){
             DB::rollback();
-            return redirect(route("indexroute"))->with("PDOError",$e->getMessage());
+            return redirect(route("indexroute"))->with(["PDOError"=>$e->getMessage(),"ver"=>"add"]);
          }
 
          // ファイル＆データの作成or編集
@@ -179,9 +187,6 @@ class learningController extends Controller
          return redirect(route("indexroute"))->with("change",$change_type);
 
    }
-
-   
-
 
 
 
@@ -205,28 +210,30 @@ class learningController extends Controller
          // 最初に書く文面
          // linkurlがphpかhtmlかで分ける
          switch(substr($request->linkurl,-3)){
+
             case "php":
               $sentence= "<?php\n echo('さぁ楽しもう！');\n echo nl2br(\"\\n\\n\");\n echo nl2br(\"".$cons_to_file."\"); ";
             break;
-            case "tml":
-               switch($request->big_theme){
-                  case "html/css":
-                  case "Javascript":
+
+            case "tml":               
                   $sentence=
                   "<h1>さぁ楽しもう！</h1>\n<p>".$cons_to_file."</p>";
-                  break;
-                  case "Environment":
-                     $sentence=
-                     "<h3>現在の環境を考えて不都合のない範囲でやってみよう！！<br>無理そうだったり時間のない場合は暗証してみよう！！</h3>\n<p>".$cons_to_file."</p>";                  
-                  break;
-                 }
             break;
          }
 
 
-         // PHP,の時＝中テーマ以下にもリンクを作成
-         switch($request->big_theme){
-            case "PHP":
+         // contentsが必要か否か？
+         $cont_which=Big_theme::select("cont_which")->where([
+            ["big_theme","=",$request->big_theme]
+            ])   
+         ->first();
+
+         if(empty($cont_which)){
+            return redirect(route("indexroute"))->with(["PDOError"=>"大テーマが登録されていません","ver"=>"add"]);
+         }
+
+
+         if($cont_which->cont_which){
                $small_link=$big_link."/".$request->small_theme;
                // もう１段階ディレクトリを必ず作成
               if(!file_exists($small_link)){
@@ -234,13 +241,9 @@ class learningController extends Controller
                } 
                // ファイルにアウトプットして出力
                  file_put_contents($small_link."/".$posts->url,$sentence);
-               break;
-            case "Javascript":
-            case "HTML/CSS":
-            case "Environment":
+            }else{
                // ファイルにアウトプットして出力
                file_put_contents($big_link."/".$posts->url,$sentence);
-            break;
          }
       }
    }

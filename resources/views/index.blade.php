@@ -16,21 +16,25 @@
     @case("edit")
       <p class="add_theme">項目を変更しました！</p>
     @break
+    @case("edit_conscious")
+      <p class="add_theme">項目の意識することを<br>変更しました！</p>
+    @break
     @case("delete")
       <p class="add_theme">項目を削除しました！</p>
     @break
   @endswitch
 @endempty
 
-{{-- PDOエラー --}}
-@empty(session("PDOError"))  
-@else
 
-  {{-- 指定のPDOERRORは以下へ --}}
-  @if(!str_contains(session("PDOError"),"URL") and !str_contains(session("PDOError"),"拡張子") and !str_contains(session("PDOError"),"内容"))
-   <p class="add_theme">{!! nl2br(e(session("PDOError")))!!}</p>
-  @endif
-@endempty
+{{-- エラーページ --}}
+@include("view_error",(["type"=>"","ver"=>""]))
+
+
+{{-- 実験用 --}}
+@include("view_error",(["type"=>"","ver"=>"edit_conscious"]))
+
+
+
 
 <div class="each_title">
 @foreach ($big_array as $big_str)
@@ -58,6 +62,7 @@
 <div class="crud_list">
   <p class="field_display">Add</p>
   <p class="field_display">Edit</p>
+  <p class="field_display">Edit_Conscious</p>
   <p class="field_display">Delete</p>
   <p class="to_config_page"><a href="{{route("configroute")}}">Config</a></p>
 </div>
@@ -76,6 +81,8 @@
 {{-- 編集ページの呼び出し --}}
 @include("get_edit")
 
+{{-- 編集ページの呼び出し --}}
+@include("get_edit_conscious")
 
 {{-- 消去ページの呼び出し --}}
 @include("get_delete")

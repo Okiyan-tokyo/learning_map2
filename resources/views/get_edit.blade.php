@@ -32,15 +32,17 @@
   <label  class="edit_decide_name" for="change_name">変更後の名称
      <input id="change_name" type="text" name="after_edit_name">
   </label>
-  @error('after_edit_name')
-    <p class="if_error"> {{$message}}</p>
-  @enderror
 </div>
 
 <div class="plus_button_div">
   <button id="edit_button">名称の編集！</button>
 </div>
 </form>
+
+{{-- エラーページ：拡張子 --}}
+@include("view_error",(["type"=>"linkurl","ver"=>"edit"]))    
+
+
 
 <p class="to_conscious">意識することは<a href="{{route("edit_conscious_route")}}">こちらへ</a></p>
 

@@ -97,8 +97,6 @@ class ConfigController extends Controller
     // 既存の編集
     public function conf_patch(Request $request,Big_theme $post){
 
-    
-
         // 入力不備対策 
         $request->validate([
             "type1"=>["required","regex:/^(theme_name|cont|file_type|theme_delete)$/"],

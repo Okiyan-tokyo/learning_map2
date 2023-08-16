@@ -13,7 +13,6 @@ class PatchController extends Controller
 {
     public function namechange(Request $request){
         
-    
         $check_class=new CheckController();
 
         try{
@@ -21,7 +20,7 @@ class PatchController extends Controller
          DB::transaction(function()use($request,$check_class){
         
         $big_theme=$request->big_theme;
-        $small_theme=$request->small_theme;        
+        $small_theme=$request->small_theme2;      
         $edit_contents=$request->cont_change2;
         $edit_item_id=$request->edit_item_id;
         $after_edit_name=$request->after_edit_name;
@@ -44,8 +43,9 @@ class PatchController extends Controller
             $cont_pattern=true;
         }
     
+
         // contentsあり版
-      if($cont_pattern){
+      if($cont_pattern && $edit_contents!=="no_select"){
           $change_set=Learntheme::where([
               ["big_theme","=",$big_theme],
               ["small_theme","=",$small_theme],
@@ -55,16 +55,16 @@ class PatchController extends Controller
             $change_set=Learntheme::where([
                 ["big_theme","=",$big_theme],
                 ["small_theme","=",$small_theme]
-            ])->get();
+                ])->get();
         }
-        // 内容なしの場合コードを短種する
 
-          $c1=$change_set[0]->big_theme;
-          $c2=$change_set[0]->small_theme;
-          $c3=$change_set[0]->contents;
-          $c4=$change_set[0]->reference;
-          $c5=$change_set[0]->concsious;
-          $c6=$change_set[0]->url;
+        // コード短縮
+        $c1=$change_set[0]->big_theme;
+        $c2=$change_set[0]->small_theme;
+        $c3=$change_set[0]->contents;
+        $c4=$change_set[0]->reference;
+        $c5=$change_set[0]->concsious;
+        $c6=$change_set[0]->url;
 
 
             switch($cate){
@@ -74,12 +74,14 @@ class PatchController extends Controller
                     if($small_isok!=="ok"){
                         $returnvalue[]=$small_isok;
                     }
-                // 内容必要かによってパターン分け
+                
                    if(!$cont_pattern){
-                        $change_set->small_theme=$after_edit_name;
-                        }else{
+                       $change_set[0]->small_theme=$after_edit_name;
+                   }else{
                         foreach($change_set as $c){
                         $c->small_theme=$after_edit_name;
+                        $c->save();
+                        goto already_save;
                         }
                     }
                 break;
@@ -120,20 +122,66 @@ class PatchController extends Controller
             if(!empty($returnvalue)){
                 throw new \PDOException(implode("\n",$returnvalue));
             }
+
           $change_set[0]->save();
+          already_save:
         });
 
     }catch(\PDOException $e){
-        return redirect(route("indexroute"))->with("PDOError",$e->getMessage());
+        return redirect(route("indexroute"))->with(["PDOError"=>$e->getMessage(),"ver"=>"edit"]);
     }
         return redirect(route("indexroute"))->with("change","edit");
     }
 
 
     // 意識することの編集
-    public function edit_counscious(){
-        return redirect(route("indexroute"));
-    }
+    public function edit_conscious(Request $request){
+    
+        try{
+            DB::transaction(function()use($request){
+                $big_theme=$request->big_theme;
+                $small_theme=$request->small_theme3;
+                $conscious=$request->edit_conscious;
+        
+                $cont_which=Big_theme::select("cont_which")->where("big_theme",$big_theme)->pluck("cont_which")->first();
+                
+            if($cont_which===1){
+                $contents=$request->cont_change3;
+                $data=Learntheme::where([
+                ["big_theme","=",$big_theme],
+                ["small_theme","=",$small_theme],
+                ["contents","=",$contents],
+                ])->first();
+            // ファイルの変更
 
+
+
+            }elseif($cont_which===0){
+                $data=Learntheme::where([
+                    ["big_theme","=",$big_theme],
+                    ["small_theme","=",$small_theme],
+                    ["contents","=",$contents],
+                ])->first();
+            // ファイルの変更
+            
+            
+            
+            }else{
+                throw new \PDOException("データ取得のエラーです");
+                exit;
+            }
+            $data->conscious=$conscious;
+            $data->save();
+         });
+
+        }catch(\PDOException $e){
+            return redirect(route("indexroute"))->with(["PDOError"=>$e->getMessage(),"ver"=>"edit_conscious"]);
+        }
+        return redirect(route("indexroute"))->with(["change"=>"edit_conscious"]);
+    }
 }
 
+
+
+
+//SQLSTATE[42S22]: Column not found: 1054 Unknown column '0' in 'where clause' (Connection: mysql, SQL: select `cont_which` from `big_themes` where (`0` = big_theme and `1` = = and `2` = sss))
