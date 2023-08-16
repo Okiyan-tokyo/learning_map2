@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Learntheme;
 use App\Models\Big_theme;
+use Illuminate\Support\Facades\DB;
 
 class CheckController extends Controller
 {
@@ -191,18 +192,7 @@ public function small_edit($after_edit_name,$big_theme){
    return "ok";
 }
 
- 
-// public function small_if_phporquiz_edit($after_edit_name,$big_theme,$small_theme){
-//    // 既存テーマではない時、該当idのsmallthemeを全て変更
-//    $exist_lists=Learntheme::select("id","small_theme")->where([
-//       ["big_theme","=",$big_theme],
-//       ["small_theme","=",$small_theme]
-//    ])->get();
-//    foreach($exist_lists as $each_list){
-//       $edit_data=Learntheme::find($each_list["id"]);
-//       $edit_data->small_theme=$after_edit_name;
-//    }
-//    }
+
 
 
 }

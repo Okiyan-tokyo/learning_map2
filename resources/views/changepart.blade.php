@@ -1,6 +1,6 @@
 <div class="big_frame">
   <label>大テーマ</label>
-<select name="big_theme" id="big_theme{{$id_num}}">
+ <select name="big_theme" id="big_theme{{$id_num}}">
     <option hidden>選択してください</option>
     @foreach ($big_array as $big_str)
     <option>{{$big_str}}</option>
@@ -8,9 +8,17 @@
   </select>
   </div>
 
+{{-- エラー --}}
+@if($id_num===2)
+  @include("view_error", ["type" => "big_theme", "ver" => "edit"])
+@elseif($id_num===4)
+  @include("view_error", ["type" => "big_theme", "ver" => "delete"])
+@endif
+
+
  <div class="small_frame">
   <label>小テーマ</label>
-  <select name="small_theme" id="select_small_theme{{$id_num}}">
+  <select name="small_theme{{$id_num}}" id="select_small_theme{{$id_num}}">
     <option hidden value="no_select">選択してください</option>
         @foreach($big_array as $each_big)
         @if(Arr::has($small_array,$each_big))
@@ -23,6 +31,12 @@
     @endforeach
   </select>
   </div> 
+  {{-- エラーページ --}}
+  @if($id_num===2)
+  @include("view_error", ["type" => "small_theme", "ver" => "edit"]) 
+  @elseif($id_num===4)
+  @include("view_error", ["type" => "small_theme", "ver" => "delete"])
+@endif
 
  <div class="cont_frame">
   <label>内容</label>
@@ -47,3 +61,11 @@
     @endforeach
   </select>
   </div> 
+
+
+  {{-- エラーページ --}}
+  @if($id_num===2)
+  @include("view_error", ["type" => "contents", "ver" => "edit"]) @elseif($id_num===4)
+  @include("view_error", ["type" => "contents", "ver" => "delete"])
+@endif
+

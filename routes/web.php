@@ -34,10 +34,6 @@ Route::delete("delete/name",[DeleteController::class,"themedelete"])
 Route::patch("patch/conscious",([PatchController::class,"edit_conscious"]))
 ->name("edit_conscious_route");
 
-// 意識することの削除
-Route::delete("delete/conscious",([PatchController::class,"delete_conscious"]))
-->name("delete_conscious_route");
-
 // 初期設定/設定追加のページへ
 Route::get("config/config",[ConfigController::class,"conf_base"])
 ->name("configroute");

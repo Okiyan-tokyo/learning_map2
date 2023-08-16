@@ -16,7 +16,7 @@
     </div>
 
     {{-- エラーページ --}}
-    @include("view_error",(["type"=>"big_theme"]))    
+    @include("view_error",(["type"=>"big_theme","ver"=>"add"]))    
     
     <div class="small_frame">
     <label>小テーマ</label>
@@ -49,7 +49,7 @@
     </div>
   </div>
   
-  @include("view_error",(["type"=>"small_theme"]))    
+  @include("view_error",(["type"=>"small_theme","ver"=>"add"]))    
   
   
     <div class="cont_frame">
@@ -58,7 +58,7 @@
     </div>
 
     {{-- エラーページ --}}
-    @include("view_error",(["type"=>"contents"]))    
+    @include("view_error",(["type"=>"contents","ver"=>"add"]))    
 
     <div class="refer_frame">
     <label>参考（クイズなら解答）</label>
@@ -76,7 +76,7 @@
     </div>
 
    {{-- エラーページ --}}
-    @include("view_error",(["type"=>"linkurl"]))    
+    @include("view_error",(["type"=>"linkurl","ver"=>"add"]))    
     
   
       <div class="plus_button_div">
